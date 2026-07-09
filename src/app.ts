@@ -22,6 +22,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hi Hello World");
 });
 app.use("/api/users", createRoutes);
+app.use("/api/auth", createRoutes);
 app.use("/api/auth", authRoutes);
 
 // app.use("/api/auth", authRoutes);
