@@ -1,20 +1,17 @@
 model User {
   id          String   @id @default(cuid())
-  name        String
-  email       String   @unique
+  name        String @db.VarChar(255)
+  email       String @unique
   password    String
 
   role        Role
   status      UserStatus @default(ACTIVE)
 
   address     String?
-  image       String?
-
-  gears       GearItem[]
-  orders      RentalOrder[]
-  payments    Payment[]
-  reviews     Review[]
+  profilePhoto  String?
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@map("users")
 }

@@ -3,6 +3,9 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import config from "./config";
 import httpstatus from "http-status";
+import { prisma } from "./lib/prisma";
+import bcrypt from "bcryptjs";
+import { createRoutes } from "./modules/user/user.route";
 
 const app: Application = express();
 
@@ -20,13 +23,7 @@ app.use(cookieParser());
 app.get("/", (req: Request, res: Response) => {
   res.send("Hi Hello World");
 });
-app.get("/api/users/register", (req: Request, res: Response) => {
-  const payload = req.body;
-  console.log(payload);
-  res.status(httpstatus.CREATED).json({
-    message: "register succesfully",
-  });
-});
+app.use("/api/users", createRoutes);
 
 // app.use("/api/auth", authRoutes);
 export default app;
