@@ -62,7 +62,33 @@ const getAllGearItemIntoDB = async (query: Partial<IFilterGearItem>) => {
   return result;
 };
 
+const getSingleGearItemIntoDB = async (id: string) => {
+  const result = await prisma.gearItem.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      provider: true,
+    },
+  });
+
+  return result;
+};
+
+const getAllCategoriesIntoDB = async () => {
+  const result = await prisma.gearItem.findMany({
+    select: {
+      category: true,
+    },
+    distinct: ["category"],
+  });
+
+  return result;
+};
+
 export const gearItemService = {
   createGearIntoDB,
   getAllGearItemIntoDB,
+  getSingleGearItemIntoDB,
+  getAllCategoriesIntoDB,
 };

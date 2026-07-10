@@ -27,6 +27,7 @@ app.use("/api/auth", createRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/provider", gearItemRoutes);
 app.use("/api/gear", gearItemRoutes);
+app.use("/api/categories", gearItemRoutes);
 
 // app.use("/api/auth", authRoutes);
 export default app;

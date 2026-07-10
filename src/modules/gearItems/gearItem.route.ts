@@ -7,5 +7,7 @@ const router = Router();
 
 router.post("/gear", auth(Role.PROVIDER), gearItemController.createGearItem);
 router.get("/", gearItemController.getAllGearItem);
+router.get("/:id", gearItemController.getSingleGearItem);
+router.get("/", gearItemController.getAllCategories);
 
 export const gearItemRoutes = router;
