@@ -3,7 +3,7 @@ enum Role {
   PROVIDER
   ADMIN
 }
-enum UserStatus {
+enum ActiveStatus {
   ACTIVE
   SUSPENDED
 }

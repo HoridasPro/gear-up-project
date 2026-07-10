@@ -5,7 +5,7 @@ model User {
   password    String
 
   role        Role
-  status      UserStatus @default(ACTIVE)
+  status      ActiveStatus @default(ACTIVE)
 
   address     String?
   profilePhoto  String?

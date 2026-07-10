@@ -3,9 +3,6 @@ import httpStatus from "http-status";
 import { userServiceDB } from "./user.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
-import config from "../../config";
-import { jwtUtils } from "../../utils/jwt";
-import { JwtPayload } from "jsonwebtoken";
 
 const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -23,14 +20,8 @@ const createUser = catchAsync(
 );
 const getMyProfile = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { accessToken } = req.cookies;
-    const veryfiedToken = jwtUtils.verifyToken(
-      accessToken,
-      config.jwt_access_secret,
-    ) as JwtPayload;
-
     const userProfile = await userServiceDB.getMyProfileIntoDB(
-      veryfiedToken.data.id,
+      req.user?.id as string,
     );
     console.log(userProfile);
     sendResponse(res, {
