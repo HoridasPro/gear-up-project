@@ -6,6 +6,6 @@ import { auth } from "../../middleware/auth";
 const router = Router();
 
 router.post("/gear", auth(Role.PROVIDER), gearItemController.createGearItem);
-// router.get("/", gearItemController.getAllGearItem);
+router.get("/", gearItemController.getAllGearItem);
 
 export const gearItemRoutes = router;

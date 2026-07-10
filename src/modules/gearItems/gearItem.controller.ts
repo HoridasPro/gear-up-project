@@ -17,18 +17,18 @@ const createGearItem = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const getAllGearItem = catchAsync(async (req: Request, res: Response) => {
-//   const result = await gearItemService.getAllGearItemIntoDB(req.query);
+const getAllGearItem = catchAsync(async (req: Request, res: Response) => {
+  const result = await gearItemService.getAllGearItemIntoDB(req.query);
 
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: httpStatus.CREATED,
-//     message: "Gear fatched successfully",
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "Gear fatched successfully",
+    data: result,
+  });
+});
 
 export const gearItemController = {
   createGearItem,
-  // getAllGearItem,
+  getAllGearItem,
 };

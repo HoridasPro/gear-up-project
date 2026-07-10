@@ -26,43 +26,43 @@ const createGearIntoDB = async (
   return result;
 };
 
-// const getAllGearItemIntoDB = async (query: Partial<IFilterGearItem>) => {
-//   const { category, price, brand } = query;
+const getAllGearItemIntoDB = async (query: Partial<IFilterGearItem>) => {
+  const { category, price, brand } = query;
 
-//   const where: any = {};
+  const where: any = {};
 
-//   // Category Filter
-//   if (category) {
-//     where.category = {
-//       equals: category,
-//       mode: "insensitive",
-//     };
-//   }
+  // Category Filter
+  if (category) {
+    where.category = {
+      equals: category,
+      mode: "insensitive",
+    };
+  }
 
-//   // Brand Filter
-//   if (brand) {
-//     where.brand = {
-//       equals: brand,
-//       mode: "insensitive",
-//     };
-//   }
+  // Brand Filter
+  if (brand) {
+    where.brand = {
+      equals: brand,
+      mode: "insensitive",
+    };
+  }
 
-//   // Price Filter
-//   if (price) {
-//     where.price = Number(price);
-//   }
+  // Price Filter
+  if (price) {
+    where.price = Number(price);
+  }
 
-//   const result = await prisma.gearItem.findMany({
-//     where,
-//     include: {
-//       provider: true,
-//     },
-//   });
+  const result = await prisma.gearItem.findMany({
+    where,
+    include: {
+      provider: true,
+    },
+  });
 
-//   return result;
-// };
+  return result;
+};
 
 export const gearItemService = {
   createGearIntoDB,
-  // getAllGearItemIntoDB,
+  getAllGearItemIntoDB,
 };
