@@ -3,7 +3,7 @@ import { catchAsync } from "../utils/catchAsync";
 import { jwtUtils } from "../utils/jwt";
 import config from "../config";
 import { JwtPayload } from "jsonwebtoken";
-import { Role } from "../../generated/prisma/enums";
+import { Role, ActiveStatus } from "../../generated/prisma/enums";
 import { prisma } from "../lib/prisma";
 
 declare global {
@@ -26,11 +26,13 @@ export const auth = (...requiredRoles: Role[]) => {
       : req.headers.authorization?.startsWith("Bearer")
         ? req.headers.authorization.split(" ")[1]
         : req.headers.authorization;
+    // console.log("token", token);
 
     if (!token) {
       throw new Error("User not logged in. Please login first.");
     }
     const veryfiedToken = jwtUtils.verifyToken(token, config.jwt_access_secret);
+    // console.log(veryfiedToken);
     if (!veryfiedToken.success) {
       throw new Error(veryfiedToken.error);
     }
@@ -44,8 +46,12 @@ export const auth = (...requiredRoles: Role[]) => {
     if (!user) {
       throw new Error("User not found");
     }
+    if (user.status === ActiveStatus.BLOCKED) {
+      throw new Error("User is blocked");
+    }
 
     req.user = { id, name, email, role };
+    // console.log(req.user);
     next();
   });
 };

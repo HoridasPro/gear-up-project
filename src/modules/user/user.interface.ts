@@ -1,11 +1,11 @@
-import { Role, UserStatus } from "../../../generated/prisma/enums";
+import { ActiveStatus, Role } from "../../../generated/prisma/enums";
 
 export interface UserServiceInterface {
   name: string;
   email: string;
   password: string;
   role: Role;
-  status: UserStatus;
+  status: ActiveStatus;
   address?: string;
   profilePhoto?: string;
 }

@@ -6,6 +6,7 @@ enum Role {
 enum ActiveStatus {
   ACTIVE
   SUSPENDED
+  BLOCKED
 }
 
 enum OrderStatus {
@@ -19,7 +20,6 @@ enum OrderStatus {
 
 enum PaymentMethod {
   STRIPE
-  SSLCOMMERZ
 }
 
 enum PaymentStatus {
