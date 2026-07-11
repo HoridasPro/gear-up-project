@@ -75,20 +75,8 @@ const getSingleGearItemIntoDB = async (id: string) => {
   return result;
 };
 
-const getAllCategoriesIntoDB = async () => {
-  const result = await prisma.gearItem.findMany({
-    select: {
-      category: true,
-    },
-    distinct: ["category"],
-  });
-
-  return result;
-};
-
 export const gearItemService = {
   createGearIntoDB,
   getAllGearItemIntoDB,
   getSingleGearItemIntoDB,
-  getAllCategoriesIntoDB,
 };

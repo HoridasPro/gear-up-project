@@ -41,20 +41,8 @@ const getSingleGearItem = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllCategories = catchAsync(async (req: Request, res: Response) => {
-  const result = await gearItemService.getAllCategoriesIntoDB();
-
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: "Categories fetched successfully",
-    data: result,
-  });
-});
-
 export const gearItemController = {
   createGearItem,
   getAllGearItem,
   getSingleGearItem,
-  getAllCategories,
 };

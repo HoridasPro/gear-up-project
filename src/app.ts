@@ -5,6 +5,7 @@ import config from "./config";
 import { createRoutes } from "./modules/user/user.route";
 import { authRoutes } from "./modules/auth/auth.route";
 import { gearItemRoutes } from "./modules/gearItems/gearItem.route";
+import { categoryRoutes } from "./modules/category/category.route";
 
 const app: Application = express();
 
@@ -22,12 +23,10 @@ app.use(cookieParser());
 app.get("/", (req: Request, res: Response) => {
   res.send("Hi Hello World");
 });
-// app.use("/api/users", createRoutes);
 app.use("/api/auth", createRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/provider", gearItemRoutes);
 app.use("/api/gear", gearItemRoutes);
-app.use("/api/categories", gearItemRoutes);
+app.use("/api/categories", categoryRoutes);
 
-// app.use("/api/auth", authRoutes);
 export default app;
