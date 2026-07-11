@@ -7,6 +7,7 @@ model GearItem {
   quantity    Int
   brand       String
   gearItemImage String
+  rentalOrders RentalOrder[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

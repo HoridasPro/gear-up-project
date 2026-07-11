@@ -5,7 +5,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { gearItemService } from "./gearItem.service";
 
 const createGearItem = catchAsync(async (req: Request, res: Response) => {
-  const providerId = req.user?.id as string;
+  const providerId = req.data?.id as string;
 
   const result = await gearItemService.createGearIntoDB(providerId, req.body);
 
@@ -47,7 +47,7 @@ const updateGearItem = catchAsync(async (req: Request, res: Response) => {
   const result = await gearItemService.updateGearItemIntoDB(
     id,
     req.body,
-    req.user?.id as string,
+    req.data?.id as string,
   );
 
   sendResponse(res, {
@@ -63,7 +63,7 @@ const deleteGearItem = catchAsync(async (req: Request, res: Response) => {
 
   const result = await gearItemService.deleteGearItemFromDB(
     id,
-    req.user?.id as string,
+    req.data?.id as string,
   );
 
   sendResponse(res, {

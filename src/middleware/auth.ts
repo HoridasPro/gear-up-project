@@ -9,7 +9,7 @@ import { prisma } from "../lib/prisma";
 declare global {
   namespace Express {
     interface Request {
-      user?: {
+      data?: {
         email: string;
         name: string;
         id: string;
@@ -50,7 +50,7 @@ export const auth = (...requiredRoles: Role[]) => {
       throw new Error("User is blocked");
     }
 
-    req.user = { id, name, email, role };
+    req.data = { id, name, email, role };
     // console.log(req.user);
     next();
   });

@@ -8,6 +8,11 @@ enum ActiveStatus {
   SUSPENDED
   BLOCKED
 }
+enum RentalStatus {
+  PENDING
+  APPROVED
+  RETURNED
+}
 
 enum OrderStatus {
   PLACED

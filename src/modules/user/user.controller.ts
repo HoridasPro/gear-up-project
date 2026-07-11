@@ -21,7 +21,7 @@ const createUser = catchAsync(
 const getMyProfile = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const userProfile = await userServiceDB.getMyProfileIntoDB(
-      req.user?.id as string,
+      req.data?.id as string,
     );
     console.log(userProfile);
     sendResponse(res, {

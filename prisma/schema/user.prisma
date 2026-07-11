@@ -11,6 +11,7 @@ model User {
   profilePhoto  String?
 
   gearItems    GearItem[]
+  rentalOrders RentalOrder[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

@@ -1,0 +1,14 @@
+model RentalOrder {
+  id          String   @id @default(cuid())
+  quantity    Int
+  totalPrice  Float
+  rentalDate  DateTime @default(now())
+  status      RentalStatus @default(PENDING)
+
+  gearItemId  String
+  gearItem    GearItem @relation(fields: [gearItemId], references: [id])
+  customerId  String
+  customer    User     @relation(fields: [customerId], references: [id])
+	@@map("rentalOrder")
+}
+
