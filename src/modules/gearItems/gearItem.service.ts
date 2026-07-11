@@ -75,8 +75,55 @@ const getSingleGearItemIntoDB = async (id: string) => {
   return result;
 };
 
+const updateGearItemIntoDB = async (
+  id: string,
+  payload: Partial<IInterfaceGearItem>,
+  userId: string,
+) => {
+  const gearItem = await prisma.gearItem.findFirst({
+    where: {
+      id,
+      providerId: userId,
+    },
+  });
+
+  if (!gearItem) {
+    throw new Error("Gear item not found");
+  }
+
+  return await prisma.gearItem.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+};
+
+// const deleteGearItemFromDB = async (id: string, userId: string) => {
+//   const deleteGearItem = await prisma.gearItem.findFirst({
+//     where: {
+//       id,
+//       providerId: userId,
+//     },
+//   });
+
+//   if (!deleteGearItem) {
+//     throw new Error("Gear item not found");
+//   }
+
+//   const result = await prisma.gearItem.delete({
+//     where: {
+//       id,
+//     },
+//   });
+
+//   return result;
+// };
+
 export const gearItemService = {
   createGearIntoDB,
   getAllGearItemIntoDB,
   getSingleGearItemIntoDB,
+  updateGearItemIntoDB,
+  // deleteGearItemFromDB,
 };

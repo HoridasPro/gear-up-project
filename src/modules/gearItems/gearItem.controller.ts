@@ -41,8 +41,43 @@ const getSingleGearItem = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateGearItem = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+
+  const result = await gearItemService.updateGearItemIntoDB(
+    id,
+    req.body,
+    req.user?.id as string,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Gear updated successfully",
+    data: result,
+  });
+});
+
+// const deleteGearItem = catchAsync(async (req: Request, res: Response) => {
+//   const id = req.params.id as string;
+
+//   const result = await gearItemService.deleteGearItemFromDB(
+//     id,
+//     req.user?.id as string,
+//   );
+
+//   sendResponse(res, {
+//     success: true,
+//     statusCode: httpStatus.OK,
+//     message: "Gear deleted successfully",
+//     data: result,
+//   });
+// });
+
 export const gearItemController = {
   createGearItem,
   getAllGearItem,
   getSingleGearItem,
+  updateGearItem,
+  // deleteGearItem,
 };
