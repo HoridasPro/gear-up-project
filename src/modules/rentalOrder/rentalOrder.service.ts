@@ -41,8 +41,24 @@ const createRentalIntoDB = async (
 
   return rentalOrder;
 };
+const allGetMyRentalOrdersFromDB = async (customerId: string) => {
+  const result = await prisma.rentalOrder.findMany({
+    where: {
+      customerId,
+    },
+    include: {
+      gearItem: true,
+      customer: true,
+    },
+    orderBy: {
+      rentalDate: "desc",
+    },
+  });
+
+  return result;
+};
 
 export const rentalOrderService = {
   createRentalIntoDB,
-  // getMyRentalOrdersFromDB,
+  getMyRentalOrdersFromDB: allGetMyRentalOrdersFromDB,
 };

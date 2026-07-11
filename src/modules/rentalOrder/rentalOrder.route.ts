@@ -10,5 +10,10 @@ router.post(
   auth(Role.CUSTOMER),
   rentalOrderController.createRentalOrder,
 );
+router.get(
+  "/rentals",
+  auth(Role.CUSTOMER),
+  rentalOrderController.allGetMyRentalOrders,
+);
 
 export const rentalOrderRoutes = router;
