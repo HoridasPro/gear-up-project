@@ -15,5 +15,21 @@ router.get(
   auth(Role.CUSTOMER),
   rentalOrderController.allGetMyRentalOrders,
 );
+router.get(
+  "/rentals/:id",
+  auth(Role.CUSTOMER),
+  rentalOrderController.getSingleRentalOrder,
+);
+router.get(
+  "/orders",
+  auth(Role.PROVIDER),
+  rentalOrderController.getProviderOrders,
+);
+
+// router.patch(
+//   "/orders/:id",
+//   auth(Role.PROVIDER),
+//   rentalOrderController.updateRentalOrderStatus,
+// );
 
 export const rentalOrderRoutes = router;

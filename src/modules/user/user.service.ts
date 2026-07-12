@@ -53,7 +53,18 @@ const getMyProfileIntoDB = async (id: string) => {
   return user;
 };
 
+// const getAllUsersFromDB = async () => {
+//   const result = await prisma.user.findMany({
+//     orderBy: {
+//       createdAt: "desc",
+//     },
+//   });
+
+//   return result;
+// };
+
 export const userServiceDB = {
   createUserIntoDB,
   getMyProfileIntoDB,
+  // getAllUsersFromDB
 };

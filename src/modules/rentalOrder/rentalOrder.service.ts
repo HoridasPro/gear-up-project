@@ -1,3 +1,4 @@
+import { RentalStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { IRentalOrder } from "./rentalOrder.interface";
 
@@ -10,6 +11,7 @@ const createRentalIntoDB = async (
       id: payload.gearItemId,
     },
   });
+  console.log(gearItem);
 
   if (!gearItem) {
     throw new Error("Gear item not found");
@@ -48,17 +50,98 @@ const allGetMyRentalOrdersFromDB = async (customerId: string) => {
     },
     include: {
       gearItem: true,
-      customer: true,
     },
     orderBy: {
       rentalDate: "desc",
     },
   });
 
+  if (!result) {
+    throw new Error("Rental orders not found");
+  }
+
   return result;
 };
 
+const getSingleRentalOrderFromDB = async (id: string, customerId: string) => {
+  const result = await prisma.rentalOrder.findFirst({
+    where: {
+      id,
+      customerId,
+    },
+    include: {
+      gearItem: true,
+    },
+  });
+
+  if (!result) {
+    throw new Error("Rental order not found");
+  }
+
+  return result;
+};
+
+const getProviderOrdersFromDB = async (providerId: string) => {
+  const result = await prisma.rentalOrder.findMany({
+    where: {
+      gearItem: {
+        providerId,
+      },
+    },
+    include: {
+      gearItem: true,
+      customer: true,
+    },
+    orderBy: {
+      rentalDate: "desc",
+    },
+  });
+  console.log("get result", result);
+  if (!result) {
+    throw new Error("Rental order not found");
+  }
+
+  return result;
+};
+
+// const updateRentalOrderStatusIntoDB = async (
+//   orderId: string,
+//   providerId: string,
+//   status: RentalStatus,
+// ) => {
+//   const order = await prisma.rentalOrder.findUnique({
+//     where: {
+//       id: orderId,
+//     },
+//     include: {
+//       gearItem: true,
+//     },
+//   });
+
+//   if (!order) {
+//     throw new Error("Rental order not found");
+//   }
+
+//   if (order.gearItem.providerId !== providerId) {
+//     throw new Error("You are not authorized to update this order");
+//   }
+
+//   const result = await prisma.rentalOrder.update({
+//     where: {
+//       id: orderId,
+//     },
+//     data: {
+//       status,
+//     },
+//   });
+
+//   return result;
+// };
+
 export const rentalOrderService = {
   createRentalIntoDB,
-  getMyRentalOrdersFromDB: allGetMyRentalOrdersFromDB,
+  allGetMyRentalOrdersFromDB,
+  getSingleRentalOrderFromDB,
+  getProviderOrdersFromDB,
+  // updateRentalOrderStatusIntoDB,
 };

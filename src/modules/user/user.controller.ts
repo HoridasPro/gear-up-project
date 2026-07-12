@@ -32,7 +32,19 @@ const getMyProfile = catchAsync(
     });
   },
 );
+
+// const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+//   const result = await userServiceDB.getAllUsersFromDB();
+
+//   sendResponse(res, {
+//     success: true,
+//     statusCode: httpStatus.OK,
+//     message: "Users fetched successfully",
+//     data: result,
+//   });
+// });
 export const userController = {
   createUser,
   getMyProfile,
+  // getAllUsers,
 };

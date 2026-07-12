@@ -25,10 +25,12 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hi Hello World");
 });
 app.use("/api/auth", createRoutes);
+app.use("/api/admin", createRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/provider", gearItemRoutes);
-app.use("/api/gear", gearItemRoutes);
-app.use("/api/categories", categoryRoutes);
+app.use("/api/provider", rentalOrderRoutes);
 app.use("/api", rentalOrderRoutes);
+app.use("/api/provider", gearItemRoutes);
+app.use("/api", gearItemRoutes);
+app.use("/api/categories", categoryRoutes);
 
 export default app;
