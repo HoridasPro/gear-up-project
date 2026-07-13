@@ -31,6 +31,7 @@ app.use("/api/provider", rentalOrderRoutes);
 app.use("/api", rentalOrderRoutes);
 app.use("/api/provider", gearItemRoutes);
 app.use("/api", gearItemRoutes);
-app.use("/api/categories", categoryRoutes);
+app.use("/api/admin", gearItemRoutes);
+// app.use("/api/categories", categoryRoutes);
 
 export default app;

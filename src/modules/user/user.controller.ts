@@ -3,6 +3,7 @@ import httpStatus from "http-status";
 import { userServiceDB } from "./user.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
+import { ActiveStatus } from "../../../generated/prisma/enums";
 
 const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -43,8 +44,23 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+
+  const result = await userServiceDB.updateUserStatusIntoDB(id, req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User status updated successfully",
+    data: result,
+  });
+});
+
 export const userController = {
   createUser,
   getMyProfile,
   getAllUsers,
+  updateUserStatus,
 };

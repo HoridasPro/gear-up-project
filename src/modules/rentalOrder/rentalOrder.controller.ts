@@ -80,10 +80,25 @@ const updateRentalOrderStatus = catchAsync(
     });
   },
 );
+
+// const getAllRentalOrdersByAdmin = catchAsync(
+//   async (req: Request, res: Response) => {
+//     const result = await rentalOrderService.getAllRentalOrdersByAdminIntoDB();
+
+//     sendResponse(res, {
+//       success: true,
+//       statusCode: httpStatus.OK,
+//       message: "Rental orders fetched successfully",
+//       data: result,
+//     });
+//   },
+// );
+
 export const rentalOrderController = {
   createRentalOrder,
   allGetMyRentalOrders,
   getSingleRentalOrder,
   getProviderOrders,
   updateRentalOrderStatus,
+  // getAllRentalOrdersByAdmin,
 };

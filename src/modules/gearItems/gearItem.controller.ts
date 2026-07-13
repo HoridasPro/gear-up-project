@@ -74,10 +74,24 @@ const deleteGearItem = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// const getAllGearItemForAdmin = catchAsync(
+//   async (req: Request, res: Response) => {
+//     const result = await gearItemService.getAllGearItemForAdminIntoDB();
+
+//     sendResponse(res, {
+//       success: true,
+//       statusCode: httpStatus.OK,
+//       message: "All gear fetched successfully",
+//       data: result,
+//     });
+//   },
+// );
+
 export const gearItemController = {
   createGearItem,
   getAllGearItem,
   getSingleGearItem,
   updateGearItem,
   deleteGearItem,
+  // getAllGearItemForAdmin,
 };

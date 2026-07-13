@@ -138,10 +138,47 @@ const updateRentalOrderStatusIntoDB = async (
   return result;
 };
 
+// const getAllRentalOrdersByAdminIntoDB = async () => {
+//   const result = await prisma.rentalOrder.findMany({
+//     include: {
+//       customer: {
+//         select: {
+//           id: true,
+//           name: true,
+//           email: true,
+//           role: true,
+//           status: true,
+//           address: true,
+//           profilePhoto: true,
+//         },
+//       },
+//       gearItem: {
+//         include: {
+//           provider: {
+//             select: {
+//               id: true,
+//               name: true,
+//               email: true,
+//               role: true,
+//               status: true,
+//             },
+//           },
+//         },
+//       },
+//     },
+//     orderBy: {
+//       createdAt: "desc",
+//     },
+//   });
+
+//   return result;
+// };
+
 export const rentalOrderService = {
   createRentalIntoDB,
   allGetMyRentalOrdersFromDB,
   getSingleRentalOrderFromDB,
   getProviderOrdersFromDB,
   updateRentalOrderStatusIntoDB,
+  // getAllRentalOrdersByAdminIntoDB,
 };

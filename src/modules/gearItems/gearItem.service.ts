@@ -55,7 +55,17 @@ const getAllGearItemIntoDB = async (query: Partial<IFilterGearItem>) => {
   const result = await prisma.gearItem.findMany({
     where,
     include: {
-      provider: true,
+      provider: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+          address: true,
+          profilePhoto: true,
+        },
+      },
     },
   });
 
@@ -120,10 +130,30 @@ const deleteGearItemFromDB = async (id: string, userId: string) => {
   return result;
 };
 
+// const getAllGearItemForAdminIntoDB = async () => {
+//   const result = await prisma.gearItem.findMany({
+//     include: {
+//       provider: {
+//         select: {
+//           id: true,
+//           name: true,
+//           email: true,
+//         },
+//       },
+//     },
+//     orderBy: {
+//       createdAt: "desc",
+//     },
+//   });
+
+//   return result;
+// };
+
 export const gearItemService = {
   createGearIntoDB,
   getAllGearItemIntoDB,
   getSingleGearItemIntoDB,
   updateGearItemIntoDB,
   deleteGearItemFromDB,
+  // getAllGearItemForAdminIntoDB,
 };

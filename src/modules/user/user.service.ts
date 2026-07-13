@@ -2,7 +2,8 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import { UserServiceInterface } from "./user.interface";
 import config from "../../config";
-import { profile } from "node:console";
+// import { profile } from "node:console";
+import { ActiveStatus } from "../../../generated/prisma/enums";
 
 const createUserIntoDB = async (payload: UserServiceInterface) => {
   const { name, email, password, role, status, address, profilePhoto } =
@@ -58,6 +59,37 @@ const getAllUsersFromDB = async () => {
     orderBy: {
       createdAt: "desc",
     },
+    omit: {
+      password: true,
+    },
+  });
+
+  return result;
+};
+
+const updateUserStatusIntoDB = async (
+  id: string,
+  payload: {
+    status: ActiveStatus;
+  },
+) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const result = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      status: payload.status,
+    },
   });
 
   return result;
@@ -66,5 +98,6 @@ const getAllUsersFromDB = async () => {
 export const userServiceDB = {
   createUserIntoDB,
   getMyProfileIntoDB,
-  getAllUsersFromDB
+  getAllUsersFromDB,
+  updateUserStatusIntoDB,
 };

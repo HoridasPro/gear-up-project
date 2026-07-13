@@ -5,7 +5,7 @@ enum Role {
 }
 enum ActiveStatus {
   ACTIVE
-  SUSPENDED
+  SUSPEND
   BLOCKED
 }
 enum RentalStatus {
@@ -14,21 +14,21 @@ enum RentalStatus {
   REJECTED
 }
 
-enum OrderStatus {
-  PLACED
-  CONFIRMED
-  PAID
-  PICKED_UP
-  RETURNED
-  CANCELLED
-}
+// enum OrderStatus {
+//   PLACED
+//   CONFIRMED
+//   PAID
+//   PICKED_UP
+//   RETURNED
+//   CANCELLED
+// }
 
-enum PaymentMethod {
-  STRIPE
-}
+// enum PaymentMethod {
+//   STRIPE
+// }
 
-enum PaymentStatus {
-  PENDING
-  COMPLETED
-  FAILED
-}
+// enum PaymentStatus {
+//   PENDING
+//   COMPLETED
+//   FAILED
+// }
