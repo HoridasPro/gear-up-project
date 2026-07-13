@@ -7,6 +7,7 @@ import { authRoutes } from "./modules/auth/auth.route";
 import { gearItemRoutes } from "./modules/gearItems/gearItem.route";
 import { categoryRoutes } from "./modules/category/category.route";
 import { rentalOrderRoutes } from "./modules/rentalOrder/rentalOrder.route";
+import { reviewRoute } from "./modules/review/review.route";
 
 const app: Application = express();
 
@@ -33,5 +34,6 @@ app.use("/api/provider", gearItemRoutes);
 app.use("/api", gearItemRoutes);
 app.use("/api/admin", gearItemRoutes);
 // app.use("/api/categories", categoryRoutes);
+app.use("/api", reviewRoute);
 
 export default app;

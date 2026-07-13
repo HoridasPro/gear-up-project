@@ -11,6 +11,7 @@ enum ActiveStatus {
 enum RentalStatus {
   PENDING
   APPROVED
+  RETURNED
   REJECTED
 }
 

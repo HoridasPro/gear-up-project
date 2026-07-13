@@ -1,0 +1,16 @@
+model Review {
+  id            String   @id @default(cuid())
+  rating        Int
+  comment       String
+
+  customerId    String
+  gearItemId    String
+
+  customer       User        @relation(fields: [customerId], references: [id])
+  gearItem       GearItem    @relation(fields: [gearItemId], references: [id])
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("reviews")
+}
