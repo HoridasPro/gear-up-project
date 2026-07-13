@@ -81,18 +81,18 @@ const updateRentalOrderStatus = catchAsync(
   },
 );
 
-// const getAllRentalOrdersByAdmin = catchAsync(
-//   async (req: Request, res: Response) => {
-//     const result = await rentalOrderService.getAllRentalOrdersByAdminIntoDB();
+const getAllRentalOrdersByAdmin = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await rentalOrderService.getAllRentalOrdersByAdminIntoDB();
 
-//     sendResponse(res, {
-//       success: true,
-//       statusCode: httpStatus.OK,
-//       message: "Rental orders fetched successfully",
-//       data: result,
-//     });
-//   },
-// );
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Rental orders fetched successfully",
+      data: result,
+    });
+  },
+);
 
 export const rentalOrderController = {
   createRentalOrder,
@@ -100,5 +100,5 @@ export const rentalOrderController = {
   getSingleRentalOrder,
   getProviderOrders,
   updateRentalOrderStatus,
-  // getAllRentalOrdersByAdmin,
+  getAllRentalOrdersByAdmin,
 };

@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import { UserServiceInterface } from "./user.interface";
 import config from "../../config";
-// import { profile } from "node:console";
 import { ActiveStatus } from "../../../generated/prisma/enums";
 
 const createUserIntoDB = async (payload: UserServiceInterface) => {

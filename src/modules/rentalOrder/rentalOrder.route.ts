@@ -32,10 +32,10 @@ router.patch(
   rentalOrderController.updateRentalOrderStatus,
 );
 
-// router.get(
-//   "/admin/rentals",
-//   auth(Role.ADMIN),
-//   rentalOrderController.getAllRentalOrdersByAdmin,
-// );
+router.get(
+  "/admin/rentals",
+  auth(Role.ADMIN),
+  rentalOrderController.getAllRentalOrdersByAdmin,
+);
 
 export const rentalOrderRoutes = router;
