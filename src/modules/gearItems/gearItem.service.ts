@@ -130,24 +130,24 @@ const deleteGearItemFromDB = async (id: string, userId: string) => {
   return result;
 };
 
-// const getAllGearItemForAdminIntoDB = async () => {
-//   const result = await prisma.gearItem.findMany({
-//     include: {
-//       provider: {
-//         select: {
-//           id: true,
-//           name: true,
-//           email: true,
-//         },
-//       },
-//     },
-//     orderBy: {
-//       createdAt: "desc",
-//     },
-//   });
+const getAllGearItemForAdminIntoDB = async () => {
+  const result = await prisma.gearItem.findMany({
+    include: {
+      provider: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
-//   return result;
-// };
+  return result;
+};
 
 export const gearItemService = {
   createGearIntoDB,
@@ -155,5 +155,5 @@ export const gearItemService = {
   getSingleGearItemIntoDB,
   updateGearItemIntoDB,
   deleteGearItemFromDB,
-  // getAllGearItemForAdminIntoDB,
+  getAllGearItemForAdminIntoDB,
 };

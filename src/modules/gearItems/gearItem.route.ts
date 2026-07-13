@@ -15,10 +15,10 @@ router.delete(
   gearItemController.deleteGearItem,
 );
 
-// router.get(
-//   "/gear",
-//   auth(Role.ADMIN),
-//   gearItemController.getAllGearItemForAdmin,
-// );
+router.get(
+  "/gear",
+  auth(Role.ADMIN),
+  gearItemController.getAllGearItemForAdmin,
+);
 
 export const gearItemRoutes = router;
