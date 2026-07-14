@@ -46,8 +46,25 @@ const getMyPayments = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSinglePayment = catchAsync(async (req: Request, res: Response) => {
+  const customerId = req.data!.id;
+
+  const result = await paymentService.getSinglePaymentFromDB(
+    req.params.id as string,
+    customerId,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Payment details fetched successfully",
+    data: result,
+  });
+});
+
 export const paymentController = {
   createCheckoutSession,
   confirmPayment,
   getMyPayments,
+  getSinglePayment,
 };
