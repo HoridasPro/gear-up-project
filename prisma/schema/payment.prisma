@@ -3,7 +3,7 @@ model Payment {
   currentPeriodEnd  DateTime
   amount         Float
   status         PaymentStatus @default(PENDING)
-  transactionId  String?
+  transactionId  String? @unique
 
   customerId     String
   customer       User @relation(fields: [customerId], references: [id], onDelete: Cascade)

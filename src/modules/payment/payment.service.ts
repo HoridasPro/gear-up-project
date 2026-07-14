@@ -37,9 +37,9 @@ const createCheckoutSessionIntoDB = async (
       customerId,
     },
 
-    success_url: `${config.app_url}/payment?success=true}`,
+    success_url: `${config.app_url}/payment?success=true`,
 
-    cancel_url: `${config.app_url}/payment?success=true}`,
+    cancel_url: `${config.app_url}/payment?success=true`,
   });
 
   await prisma.payment.create({
@@ -55,29 +55,34 @@ const createCheckoutSessionIntoDB = async (
 
   return {
     checkoutUrl: session.url,
+    sessionId: session.id,
   };
 };
 
-// const confirmPaymentIntoDB = async (sessionId: string) => {
-//   const session = await stripe.checkout.sessions.retrieve(sessionId);
+const confirmPaymentIntoDB = async (sessionId: string) => {
+  const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-//   if (session.payment_status !== "paid") {
-//     throw new Error("Payment not completed");
-//   }
+  if (!session) {
+    throw new Error("Checkout session not found");
+  }
 
-//   const payment = await prisma.payment.update({
-//     where: {
-//       transactionId: session.id,
-//     },
-//     data: {
-//       status: PaymentStatus.PAID,
-//     },
-//   });
+  if (session.payment_status !== "paid") {
+    throw new Error("Payment not completed");
+  }
 
-//   return payment;
-// };
+  const payment = await prisma.payment.update({
+    where: {
+      transactionId: session.id,
+    },
+    data: {
+      status: PaymentStatus.PAID,
+    },
+  });
+
+  return payment;
+};
 
 export const paymentService = {
   createCheckoutSessionIntoDB,
-  // confirmPaymentIntoDB,
+  confirmPaymentIntoDB,
 };

@@ -10,4 +10,5 @@ router.post(
   paymentController.createCheckoutSession,
 );
 
+router.post("/confirm", auth(Role.CUSTOMER), paymentController.confirmPayment);
 export const paymentRoutes = router;

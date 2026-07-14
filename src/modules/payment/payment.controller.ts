@@ -22,6 +22,18 @@ const createCheckoutSession = catchAsync(
   },
 );
 
+const confirmPayment = catchAsync(async (req: Request, res: Response) => {
+  const result = await paymentService.confirmPaymentIntoDB(req.body.sessionId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Payment confirmed successfully",
+    data: result,
+  });
+});
+
 export const paymentController = {
   createCheckoutSession,
+  confirmPayment,
 };
