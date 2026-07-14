@@ -4,11 +4,12 @@ model RentalOrder {
   totalPrice  Float
   rentalDate  DateTime @default(now())
   status      RentalStatus @default(PENDING)
+  payments    Payment[]
 
   gearItemId  String
-  gearItem    GearItem @relation(fields: [gearItemId], references: [id])
+  gearItem    GearItem @relation(fields: [gearItemId], references: [id], onDelete: Cascade)
   customerId  String
-  customer    User     @relation(fields: [customerId], references: [id])
+  customer    User     @relation(fields: [customerId], references: [id],onDelete: Cascade)
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

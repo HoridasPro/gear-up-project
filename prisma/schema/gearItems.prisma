@@ -14,7 +14,7 @@ model GearItem {
   updatedAt   DateTime @updatedAt
 
   providerId  String
-  provider    User   @relation(fields: [providerId], references: [id])
+  provider    User   @relation(fields: [providerId], references: [id],onDelete: Cascade)
 
 
   @@map("gearItem")

@@ -15,6 +15,12 @@ enum RentalStatus {
   REJECTED
 }
 
+enum PaymentStatus {
+  PENDING
+  PAID
+  CANCELLED
+  EXPIRED
+}
 // enum OrderStatus {
 //   PLACED
 //   CONFIRMED
@@ -26,10 +32,4 @@ enum RentalStatus {
 
 // enum PaymentMethod {
 //   STRIPE
-// }
-
-// enum PaymentStatus {
-//   PENDING
-//   COMPLETED
-//   FAILED
 // }
