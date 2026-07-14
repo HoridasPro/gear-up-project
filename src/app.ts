@@ -36,6 +36,6 @@ app.use("/api", gearItemRoutes);
 app.use("/api/admin", gearItemRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api", reviewRoute);
-app.use("/api/payment", paymentRoutes);
+app.use("/api/payments", paymentRoutes);
 
 export default app;

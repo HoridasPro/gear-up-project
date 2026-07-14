@@ -82,7 +82,27 @@ const confirmPaymentIntoDB = async (sessionId: string) => {
   return payment;
 };
 
+const getMyPaymentsFromDB = async (customerId: string) => {
+  const payments = await prisma.payment.findMany({
+    where: {
+      customerId,
+    },
+    include: {
+      rentalOrder: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  if (!payments) {
+    throw new Error("Payment history not found");
+  }
+
+  return payments;
+};
+
 export const paymentService = {
   createCheckoutSessionIntoDB,
   confirmPaymentIntoDB,
+  getMyPaymentsFromDB,
 };

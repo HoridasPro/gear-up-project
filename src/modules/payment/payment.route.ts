@@ -11,4 +11,6 @@ router.post(
 );
 
 router.post("/confirm", auth(Role.CUSTOMER), paymentController.confirmPayment);
+
+router.get("/", auth(Role.CUSTOMER), paymentController.getMyPayments);
 export const paymentRoutes = router;
