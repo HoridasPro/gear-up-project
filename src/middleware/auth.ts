@@ -26,13 +26,11 @@ export const auth = (...requiredRoles: Role[]) => {
       : req.headers.authorization?.startsWith("Bearer")
         ? req.headers.authorization.split(" ")[1]
         : req.headers.authorization;
-    // console.log("token", token);
 
     if (!token) {
       throw new Error("User not logged in. Please login first.");
     }
     const veryfiedToken = jwtUtils.verifyToken(token, config.jwt_access_secret);
-    // console.log(veryfiedToken);
     if (!veryfiedToken.success) {
       throw new Error(veryfiedToken.error);
     }
@@ -51,7 +49,6 @@ export const auth = (...requiredRoles: Role[]) => {
     }
 
     req.data = { id, name, email, role };
-    // console.log(req.user);
     next();
   });
 };

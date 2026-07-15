@@ -13,10 +13,6 @@ const createReviewIntoDB = async (
       status: RentalStatus.RETURNED,
     },
   });
-  console.log("Customer ID:", customerId);
-  console.log("Gear Item ID:", payload.gearItemId);
-
-  console.log(rental);
 
   if (!rental) {
     throw new Error("You can review only after returning the rented gear");

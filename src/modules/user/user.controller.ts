@@ -3,7 +3,6 @@ import httpStatus from "http-status";
 import { userServiceDB } from "./user.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
-import { ActiveStatus } from "../../../generated/prisma/enums";
 
 const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

@@ -81,6 +81,9 @@ const getSingleGearItemIntoDB = async (id: string) => {
       provider: true,
     },
   });
+  if (!result) {
+    throw new Error("Gear not found in the database");
+  }
 
   return result;
 };
