@@ -54,7 +54,6 @@ const getProviderOrders = catchAsync(async (req: Request, res: Response) => {
   const result = await rentalOrderService.getProviderOrdersFromDB(
     req.data?.id as string,
   );
-  console.log(result);
 
   sendResponse(res, {
     success: true,

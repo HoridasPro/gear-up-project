@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import { UserServiceInterface } from "./user.interface";
 import config from "../../config";
-import { ActiveStatus } from "../../../generated/prisma/enums";
+import { ActiveStatus, Role } from "../../../generated/prisma/enums";
 
 const createUserIntoDB = async (payload: UserServiceInterface) => {
   const { name, email, password, role, status, address, profilePhoto } =
@@ -24,7 +24,7 @@ const createUserIntoDB = async (payload: UserServiceInterface) => {
       name,
       email,
       password: hashedPassword,
-      role,
+      role: role.toUpperCase() as Role,
       status,
       address,
       profilePhoto,
@@ -87,7 +87,7 @@ const updateUserStatusIntoDB = async (
       id,
     },
     data: {
-      status: payload.status,
+      status: payload.status.toUpperCase() as ActiveStatus,
     },
   });
 

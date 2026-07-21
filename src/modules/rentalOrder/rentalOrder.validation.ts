@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { RentalStatus, Role } from "../../../generated/prisma/enums";
+import { RentalStatus } from "../../../generated/prisma/enums";
 
 const createRentalOrderValidationSchema = z.object({
   body: z.object({

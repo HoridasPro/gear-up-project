@@ -96,7 +96,6 @@ const getProviderOrdersFromDB = async (providerId: string) => {
       rentalDate: "desc",
     },
   });
-  console.log("get result", result);
   if (!result) {
     throw new Error("Rental order not found");
   }
