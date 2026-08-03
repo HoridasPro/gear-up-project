@@ -19,6 +19,7 @@ app.use(
     credentials: true,
   }),
 );
+console.log("APP URL:", config.app_url);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
