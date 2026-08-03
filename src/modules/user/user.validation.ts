@@ -35,38 +35,6 @@ const createUserValidationSchema = z.object({
           });
         }
       }),
-
-    // role: z
-    //   .string()
-    //   .trim()
-    //   .min(1, "Role is required")
-    //   .refine(
-    //     (value) =>
-    //       value === "" || value === Role.CUSTOMER || value === Role.PROVIDER,
-    //     {
-    //       message: "Role must be CUSTOMER or PROVIDER",
-    //     },
-    //   ),
-    // role: z
-    //   .string()
-    //   .trim()
-    //   .transform((value) => value.toUpperCase())
-    //   .superRefine((value, ctx) => {
-    //     if (!value) {
-    //       ctx.addIssue({
-    //         code: "custom",
-    //         message: "Role is required",
-    //       });
-    //       return;
-    //     }
-
-    //     if (value !== Role.CUSTOMER && value !== Role.PROVIDER) {
-    //       ctx.addIssue({
-    //         code: "custom",
-    //         message: "Role must be CUSTOMER or PROVIDER",
-    //       });
-    //     }
-    //   }),
     role: z
       .string()
       .trim()
@@ -105,27 +73,6 @@ const createUserValidationSchema = z.object({
       }),
   }),
 });
-
-// const updateUserValidationSchema = z.object({
-//   body: z.object({
-//     status: z.string().superRefine((value, ctx) => {
-//       if (!value) {
-//         ctx.addIssue({
-//           code: "custom",
-//           message: "Status is required",
-//         });
-//         return;
-//       }
-
-//       if (!Object.values(ActiveStatus).includes(value as ActiveStatus)) {
-//         ctx.addIssue({
-//           code: "custom",
-//           message: "Invalid status",
-//         });
-//       }
-//     }),
-//   }),
-// });
 
 const updateUserValidationSchema = z.object({
   body: z.object({

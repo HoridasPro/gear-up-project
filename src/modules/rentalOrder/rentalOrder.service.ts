@@ -11,7 +11,6 @@ const createRentalIntoDB = async (
       id: payload.gearItemId,
     },
   });
-  console.log(gearItem);
 
   if (!gearItem) {
     throw new Error("Gear item not found");
@@ -21,7 +20,22 @@ const createRentalIntoDB = async (
     throw new Error("Insufficient quantity");
   }
 
-  const totalPrice = gearItem.price * payload.quantity;
+  const startDate = new Date(payload.startDate);
+  const endDate = new Date(payload.endDate);
+
+  if (startDate >= endDate) {
+    throw new Error("End date must be after start date");
+  }
+
+  const days = Math.ceil(
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+  );
+
+  const totalPrice = gearItem.price * payload.quantity * days;
+
+  console.log(payload);
+  // console.log(payload.startDate);
+  // console.log(payload.endDate);
 
   const rentalOrder = await prisma.rentalOrder.create({
     data: {
@@ -29,6 +43,8 @@ const createRentalIntoDB = async (
       customerId,
       quantity: payload.quantity,
       totalPrice,
+      startDate,
+      endDate,
     },
   });
 

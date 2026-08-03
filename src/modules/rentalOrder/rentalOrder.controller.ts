@@ -4,13 +4,11 @@ import { sendResponse } from "../../utils/sendResponse";
 import { rentalOrderService } from "./rentalOrder.service";
 import httpStatus from "http-status";
 import { RentalStatus } from "../../../generated/prisma/enums";
-
 const createRentalOrder = catchAsync(async (req: Request, res: Response) => {
   const result = await rentalOrderService.createRentalIntoDB(
     req.body,
     req.data?.id as string,
   );
-  console.log(req.body);
 
   sendResponse(res, {
     success: true,
