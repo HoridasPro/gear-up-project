@@ -14,7 +14,7 @@ router.post(
 );
 router.get(
   "/me",
-  auth(Role.CUSTOMER, Role.PROVIDER),
+  auth(Role.CUSTOMER, Role.PROVIDER, Role.ADMIN),
   userController.getMyProfile,
 );
 router.get("/users", auth(Role.ADMIN), userController.getAllUsers);

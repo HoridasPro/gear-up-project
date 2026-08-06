@@ -5,6 +5,11 @@ type TsendResponse<T> = {
   statusCode: number;
   message: string;
   data: T;
+  pagination?: {
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 };
 export const sendResponse = <T>(res: Response, data: TsendResponse<T>) => {
   res.status(data.statusCode).json({
@@ -12,5 +17,6 @@ export const sendResponse = <T>(res: Response, data: TsendResponse<T>) => {
     statusCode: data.statusCode,
     message: data.message,
     data: data.data,
+    pagination: data.pagination, // ✅ এটা যোগ করো
   });
 };

@@ -42,6 +42,10 @@ const createRentalIntoDB = async (
       startDate,
       endDate,
     },
+    include: {
+      customer: true,
+      gearItem: true,
+    },
   });
 
   await prisma.gearItem.update({
@@ -55,74 +59,7 @@ const createRentalIntoDB = async (
 
   return rentalOrder;
 };
-// const createRentalIntoDB = async (
-//   payload: IRentalOrder,
-//   customerId: string,
-// ) => {
-//   // ১. Prisma Transaction ব্যবহার করা হচ্ছে যেন দুটি কাজ একসাথে হয়
-//   return await prisma.$transaction(async (tx) => {
-//     // Gear item খোঁজা
-//     const gearItem = await tx.gearItem.findUnique({
-//       where: {
-//         id: payload.gearItemId,
-//       },
-//     });
 
-//     if (!gearItem) {
-//       throw new Error("Gear item not found");
-//     }
-
-//     // ২. স্টক চেক (ভুল চিহ্নিত করার জন্য বর্তমান স্টক প্রিন্ট করতে পারেন)
-//     if (gearItem.quantity < payload.quantity) {
-//       throw new Error(
-//         `Insufficient quantity. Available stock: ${gearItem.quantity}, Requested: ${payload.quantity}`,
-//       );
-//     }
-
-//     const startDate = new Date(payload.startDate);
-//     const endDate = new Date(payload.endDate);
-
-//     if (startDate >= endDate) {
-//       throw new Error("End date must be after start date");
-//     }
-
-//     // দিন গণনা
-//     const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
-//     const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-//     if (days <= 0) {
-//       throw new Error("Rental duration must be at least 1 day");
-//     }
-
-//     const totalPrice = gearItem.price * payload.quantity * days;
-
-//     // ৩. রেন্টাল অর্ডার তৈরি
-//     const rentalOrder = await tx.rentalOrder.create({
-//       data: {
-//         gearItemId: payload.gearItemId,
-//         customerId,
-//         quantity: payload.quantity,
-//         totalPrice,
-//         startDate,
-//         endDate,
-//       },
-//     });
-
-//     // ৪. স্টক কমানো
-//     await tx.gearItem.update({
-//       where: {
-//         id: payload.gearItemId,
-//       },
-//       data: {
-//         quantity: {
-//           decrement: payload.quantity, // সরাসরি Prisma-র decrement ব্যবহার করা নিরাপদ
-//         },
-//       },
-//     });
-
-//     return rentalOrder;
-//   });
-// };
 const allGetMyRentalOrdersFromDB = async (customerId: string) => {
   const result = await prisma.rentalOrder.findMany({
     where: {

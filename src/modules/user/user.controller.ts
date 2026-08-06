@@ -33,14 +33,35 @@ const getMyProfile = catchAsync(
   },
 );
 
+// const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+//   const result = await userServiceDB.getAllUsersFromDB();
+
+//   sendResponse(res, {
+//     success: true,
+//     statusCode: httpStatus.OK,
+//     message: "Users fetched successfully",
+//     data: result,
+//   });
+// });
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-  const result = await userServiceDB.getAllUsersFromDB();
+  const search = String(req.query.search || "");
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  console.log("page now",page);
+  console.log("limit now",limit);
+
+  const result = await userServiceDB.getAllUsersFromDB(search, page, limit);
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: "Users fetched successfully",
-    data: result,
+    data: result.users,
+    pagination: {
+      page,
+      limit,
+      totalPages: result.totalPages,
+    },
   });
 });
 

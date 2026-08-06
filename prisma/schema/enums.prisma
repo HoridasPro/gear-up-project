@@ -13,6 +13,7 @@ enum RentalStatus {
   APPROVED
   RETURNED
   REJECTED
+  PICKEDUP
 }
 
 enum PaymentStatus {

@@ -91,7 +91,7 @@ const createCheckoutSessionIntoDB = async (
     ],
     metadata: {
       paymentId: payment.id, // 👈 ডাটাবেজের আসল ID Stripe-এ পাঠানো হলো
-      rentalOrderId: rental.id,
+      // rentalOrderId: rental.id,
     },
     success_url: `${config.app_url}/payment?success=true&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${config.app_url}/payment?cancel=true`,
@@ -101,6 +101,33 @@ const createCheckoutSessionIntoDB = async (
     checkoutUrl: session.url,
     sessionId: session.id,
   };
+};
+const confirmPaymentIntoDB = async (sessionId: string) => {
+  const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+  if (!session) {
+    throw new Error("Checkout session not found");
+  }
+
+  if (session.payment_status !== "paid") {
+    throw new Error("Payment not completed");
+  }
+  const paymentId = session.metadata?.paymentId;
+
+  if (!paymentId) {
+    throw new Error("Payment ID not found in metadata");
+  }
+  const payment = await prisma.payment.update({
+    where: {
+      // transactionId: session.id,
+      id: paymentId,
+    },
+    data: {
+      status: PaymentStatus.PAID,
+    },
+  });
+
+  return payment;
 };
 // const confirmPaymentIntoDB = async (sessionId: string) => {
 //   const session = await stripe.checkout.sessions.retrieve(sessionId);
@@ -113,9 +140,17 @@ const createCheckoutSessionIntoDB = async (
 //     throw new Error("Payment not completed");
 //   }
 
+//   // Stripe-এর metadata থেকে আমাদের ডাটাবেজের paymentId নেওয়া হচ্ছে
+//   const paymentId = session.metadata?.paymentId;
+
+//   if (!paymentId) {
+//     throw new Error("Payment ID not found in metadata");
+//   }
+
+//   // 💡 transactionId ছাড়াই সরাসরি Primary Key (id) দিয়ে আপডেট করা হচ্ছে!
 //   const payment = await prisma.payment.update({
 //     where: {
-//       transactionId: session.id,
+//       id: paymentId, // 👈 একদম ১00% নিরাপদ, কোনো Prisma Schema পরিবর্তন ছাড়াই কাজ করবে
 //     },
 //     data: {
 //       status: PaymentStatus.PAID,
@@ -124,36 +159,6 @@ const createCheckoutSessionIntoDB = async (
 
 //   return payment;
 // };
-const confirmPaymentIntoDB = async (sessionId: string) => {
-  const session = await stripe.checkout.sessions.retrieve(sessionId);
-
-  if (!session) {
-    throw new Error("Checkout session not found");
-  }
-
-  if (session.payment_status !== "paid") {
-    throw new Error("Payment not completed");
-  }
-
-  // Stripe-এর metadata থেকে আমাদের ডাটাবেজের paymentId নেওয়া হচ্ছে
-  const paymentId = session.metadata?.paymentId;
-
-  if (!paymentId) {
-    throw new Error("Payment ID not found in metadata");
-  }
-
-  // 💡 transactionId ছাড়াই সরাসরি Primary Key (id) দিয়ে আপডেট করা হচ্ছে!
-  const payment = await prisma.payment.update({
-    where: {
-      id: paymentId, // 👈 একদম ১00% নিরাপদ, কোনো Prisma Schema পরিবর্তন ছাড়াই কাজ করবে
-    },
-    data: {
-      status: PaymentStatus.PAID,
-    },
-  });
-
-  return payment;
-};
 const getMyPaymentsFromDB = async (customerId: string) => {
   const payments = await prisma.payment.findMany({
     where: {
