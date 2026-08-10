@@ -53,19 +53,56 @@ const getMyProfileIntoDB = async (id: string) => {
   return user;
 };
 
-// const getAllUsersFromDB = async () => {
-//   const result = await prisma.user.findMany({
-//     orderBy: {
-//       createdAt: "desc",
-//     },
-//     omit: {
-//       password: true,
-//     },
-//   });
+// const getAllUsersFromDB = async (
+//   search: string = "",
+//   page: number = 1,
+//   limit: number = 10,
+// ) => {
+//   const skip = (page - 1) * limit;
 
-//   return result;
+//   const where = search
+//     ? {
+//         OR: [
+//           {
+//             name: {
+//               contains: search,
+//               mode: "insensitive" as const,
+//             },
+//           },
+//           {
+//             email: {
+//               contains: search,
+//               mode: "insensitive" as const,
+//             },
+//           },
+//         ],
+//       }
+//     : {};
+
+//   const [users, total] = await Promise.all([
+//     prisma.user.findMany({
+//       where,
+//       skip,
+//       take: limit,
+//       orderBy: {
+//         createdAt: "desc",
+//       },
+//       omit: {
+//         password: true,
+//       },
+//     }),
+
+//     prisma.user.count({
+//       where,
+//     }),
+//   ]);
+//   console.log("Total:", total);
+//   console.log("Total Pages:", Math.ceil(total / limit));
+//   return {
+//     users,
+//     totalPages: Math.ceil(total / limit),
+//   };
 // };
-
 const getAllUsersFromDB = async (
   search: string = "",
   page: number = 1,
@@ -109,14 +146,19 @@ const getAllUsersFromDB = async (
       where,
     }),
   ]);
-  console.log("Total:", total);
-  console.log("Total Pages:", Math.ceil(total / limit));
+
+  const totalPages = Math.ceil(total / limit);
+
+  
+
   return {
     users,
-    totalPages: Math.ceil(total / limit),
+    total,
+    page,
+    limit,
+    totalPages,
   };
 };
-
 const updateUserStatusIntoDB = async (
   id: string,
   payload: {

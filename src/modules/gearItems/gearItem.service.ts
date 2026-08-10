@@ -26,10 +26,75 @@ const createGearIntoDB = async (
   return result;
 };
 
+// const getAllGearItemIntoDB = async (query: Partial<IFilterGearItem>) => {
+//   const { category, price, brand } = query;
+
+//   const where: any = {};
+
+//   // Category Filter
+//   if (category) {
+//     where.category = {
+//       equals: category,
+//       mode: "insensitive",
+//     };
+//   }
+
+//   // Brand Filter
+//   if (brand) {
+//     where.brand = {
+//       equals: brand,
+//       mode: "insensitive",
+//     };
+//   }
+
+//   // Price Filter
+//   if (price) {
+//     where.price = Number(price);
+//   }
+
+//   const result = await prisma.gearItem.findMany({
+//     where,
+//     include: {
+//       provider: {
+//         select: {
+//           id: true,
+//           name: true,
+//           email: true,
+//           role: true,
+//           status: true,
+//           address: true,
+//           profilePhoto: true,
+//         },
+//       },
+//     },
+//   });
+
+//   return result;
+// };
+// gearItem.service.ts
+
 const getAllGearItemIntoDB = async (query: Partial<IFilterGearItem>) => {
-  const { category, price, brand } = query;
+  const { category, price, brand, search } = query;
 
   const where: any = {};
+
+  // 🔴 এখানে Search Filter বসাবেন
+  if (search) {
+    where.OR = [
+      {
+        title: {
+          contains: search,
+          mode: "insensitive",
+        },
+      },
+      {
+        description: {
+          contains: search,
+          mode: "insensitive",
+        },
+      },
+    ];
+  }
 
   // Category Filter
   if (category) {

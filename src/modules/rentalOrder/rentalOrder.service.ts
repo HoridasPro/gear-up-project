@@ -2,10 +2,83 @@ import { RentalStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { IRentalOrder } from "./rentalOrder.interface";
 
+// const createRentalIntoDB = async (
+//   payload: IRentalOrder,
+//   customerId: string,
+// ) => {
+//   const gearItem = await prisma.gearItem.findUnique({
+//     where: {
+//       id: payload.gearItemId,
+//     },
+//   });
+
+//   if (!gearItem) {
+//     throw new Error("Gear item not found");
+//   }
+
+//   if (gearItem.quantity < payload.quantity) {
+//     throw new Error("Insufficient quantity");
+//   }
+
+//   const startDate = new Date(payload.startDate);
+//   const endDate = new Date(payload.endDate);
+
+//   if (startDate >= endDate) {
+//     throw new Error("End date must be after start date");
+//   }
+
+//   const days = Math.ceil(
+//     (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+//   );
+
+//   const totalPrice = gearItem.price * payload.quantity * days;
+
+//   const rentalOrder = await prisma.rentalOrder.create({
+//     data: {
+//       gearItemId: payload.gearItemId,
+//       customerId,
+//       quantity: payload.quantity,
+//       totalPrice,
+//       startDate,
+//       endDate,
+//     },
+//     include: {
+//       customer: true,
+//       gearItem: true,
+//     },
+//   });
+
+//   await prisma.gearItem.update({
+//     where: {
+//       id: payload.gearItemId,
+//     },
+//     data: {
+//       quantity: gearItem.quantity - payload.quantity,
+//     },
+//   });
+
+//   return rentalOrder;
+// };
 const createRentalIntoDB = async (
   payload: IRentalOrder,
   customerId: string,
 ) => {
+  // Check customer
+  const customer = await prisma.user.findUnique({
+    where: {
+      id: customerId,
+    },
+  });
+
+  if (!customer) {
+    throw new Error("Customer not found");
+  }
+
+  // Check customer status
+  if (customer.status !== "ACTIVE") {
+    throw new Error("Your account is suspended. You cannot place an order.");
+  }
+
   const gearItem = await prisma.gearItem.findUnique({
     where: {
       id: payload.gearItemId,

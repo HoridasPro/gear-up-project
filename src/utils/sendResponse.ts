@@ -8,6 +8,7 @@ type TsendResponse<T> = {
   pagination?: {
     page: number;
     limit: number;
+    total: number;
     totalPages: number;
   };
 };
@@ -17,6 +18,7 @@ export const sendResponse = <T>(res: Response, data: TsendResponse<T>) => {
     statusCode: data.statusCode,
     message: data.message,
     data: data.data,
-    pagination: data.pagination, // ✅ এটা যোগ করো
+    total: data.pagination?.total,
+    pagination: data.pagination,
   });
 };

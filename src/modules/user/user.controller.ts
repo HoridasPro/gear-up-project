@@ -43,12 +43,35 @@ const getMyProfile = catchAsync(
 //     data: result,
 //   });
 // });
+// const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+//   const search = String(req.query.search || "");
+//   const page = Number(req.query.page) || 1;
+//   const limit = Number(req.query.limit) || 10;
+//   console.log("page now",page);
+//   console.log("limit now",limit);
+
+//   const result = await userServiceDB.getAllUsersFromDB(search, page, limit,total);
+
+//   sendResponse(res, {
+//     success: true,
+//     statusCode: httpStatus.OK,
+//     message: "Users fetched successfully",
+//     data: result.users,
+//     pagination: {
+//       page,
+//       limit,
+//        total: result.total,
+//       totalPages: result.totalPages,
+//     },
+//   });
+// });
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const search = String(req.query.search || "");
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 10;
-  console.log("page now",page);
-  console.log("limit now",limit);
+
+  console.log("page now:", page);
+  console.log("limit now:", limit);
 
   const result = await userServiceDB.getAllUsersFromDB(search, page, limit);
 
@@ -56,10 +79,13 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
     success: true,
     statusCode: httpStatus.OK,
     message: "Users fetched successfully",
+
     data: result.users,
+
     pagination: {
-      page,
-      limit,
+      page: result.page,
+      limit: result.limit,
+      total: result.total,
       totalPages: result.totalPages,
     },
   });

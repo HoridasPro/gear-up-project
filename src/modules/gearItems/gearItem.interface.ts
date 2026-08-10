@@ -11,4 +11,5 @@ export interface IFilterGearItem {
   category: string;
   price: number;
   brand: string;
+  search: string;
 }

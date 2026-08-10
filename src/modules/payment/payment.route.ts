@@ -24,3 +24,4 @@ router.get("/", auth(Role.CUSTOMER), paymentController.getMyPayments);
 
 router.get("/:id", auth(Role.CUSTOMER), paymentController.getSinglePayment);
 export const paymentRoutes = router;
+// router.post("/cancel", auth(Role.CUSTOMER), paymentController.cancelPayment);
