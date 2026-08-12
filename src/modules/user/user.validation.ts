@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { Role } from "../../../generated/prisma/enums";
-import { ActiveStatus } from "./../../../generated/prisma/enums";
+import { Role, ActiveStatus } from "../../../generated/prisma/enums";
 
 const createUserValidationSchema = z.object({
   body: z.object({
@@ -16,6 +15,7 @@ const createUserValidationSchema = z.object({
           message: "Email is not valid",
         },
       ),
+
     password: z
       .string()
       .trim()
@@ -35,42 +35,17 @@ const createUserValidationSchema = z.object({
           });
         }
       }),
+
     role: z
       .string()
       .trim()
       .min(1, "Role is required")
       .transform((value) => value.toUpperCase())
-      .refine(
-        (value) =>
-          value === "" || value === Role.CUSTOMER || value === Role.PROVIDER,
-        {
-          message: "Role must be CUSTOMER or PROVIDER",
-        },
-      ),
-
-    address: z.string().trim().min(1, "Role is required"),
-
-    profilePhoto: z
-      .string()
-      .trim()
-      .superRefine((value, ctx) => {
-        if (!value) {
-          ctx.addIssue({
-            code: "custom",
-            message: "Profile photo is required",
-          });
-          return;
-        }
-
-        try {
-          new URL(value);
-        } catch {
-          ctx.addIssue({
-            code: "custom",
-            message: "Photo URL is not valid",
-          });
-        }
+      .refine((value) => value === Role.CUSTOMER || value === Role.PROVIDER, {
+        message: "Role must be CUSTOMER or PROVIDER",
       }),
+
+    address: z.string().trim().min(1, "Address is required"),
   }),
 });
 
@@ -98,6 +73,7 @@ const updateUserValidationSchema = z.object({
       }),
   }),
 });
+
 export const userValidation = {
   createUserValidationSchema,
   updateUserValidationSchema,

@@ -14,7 +14,6 @@ const createCheckoutSessionIntoDB = async (
 
   if (rental.customerId !== customerId) throw new Error("Unauthorized access");
 
-  // ১. আগে ডাটাবেজে Payment রেকর্ড বানিয়ে তার ID তৈরি করে নিন
   const payment = await prisma.payment.create({
     data: {
       amount: rental.totalPrice,
@@ -25,7 +24,6 @@ const createCheckoutSessionIntoDB = async (
     },
   });
 
-  // ২. এখন Stripe Session তৈরি করুন এবং metadata-তে payment.id দিয়ে দিন
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "payment",
@@ -83,17 +81,6 @@ const confirmPaymentIntoDB = async (sessionId: string) => {
 };
 
 const getMyPaymentsFromDB = async (customerId: string) => {
-  // const payments = await prisma.payment.findMany({
-  //   where: {
-  //     customerId,
-  //   },
-  //   include: {
-  //     rentalOrder: true,
-  //   },
-  //   orderBy: {
-  //     createdAt: "desc",
-  //   },
-  // });
   const payments = await prisma.payment.findMany({
     where: {
       customerId,
@@ -139,47 +126,9 @@ const getSinglePaymentFromDB = async (
   return payment;
 };
 
-// const cancelPaymentIntoDB = async (sessionId: string) => {
-//   const session = await stripe.checkout.sessions.retrieve(sessionId);
-
-//   console.log("get session id", session);
-
-//   const paymentId = session.metadata?.paymentId;
-
-//   if (!paymentId) {
-//     throw new Error("Payment ID not found in Stripe session");
-//   }
-
-//   const payment = await prisma.payment.findUnique({
-//     where: {
-//       id: paymentId,
-//     },
-//   });
-
-//   if (!payment) {
-//     throw new Error("Payment not found");
-//   }
-
-//   if (payment.status === PaymentStatus.PAID) {
-//     throw new Error("This payment is already completed");
-//   }
-
-//   const updatedPayment = await prisma.payment.update({
-//     where: {
-//       id: paymentId,
-//     },
-//     data: {
-//       status: PaymentStatus.CANCELLED,
-//     },
-//   });
-
-//   return updatedPayment;
-// };
-
 export const paymentService = {
   createCheckoutSessionIntoDB,
   confirmPaymentIntoDB,
   getMyPaymentsFromDB,
   getSinglePaymentFromDB,
-  // cancelPaymentIntoDB,
 };

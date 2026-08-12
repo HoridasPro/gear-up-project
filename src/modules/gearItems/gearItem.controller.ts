@@ -86,6 +86,21 @@ const getAllGearItemForAdmin = catchAsync(
     });
   },
 );
+const getMyGearItems = async (req: Request, res: Response) => {
+  const providerId = req?.data?.id as string;
+
+  const result = await gearItemService.getMyGearItemsIntoDB(
+    providerId,
+    req.query,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "All gear fetched successfully",
+    data: result,
+  });
+};
 
 export const gearItemController = {
   createGearItem,
@@ -94,4 +109,5 @@ export const gearItemController = {
   updateGearItem,
   deleteGearItem,
   getAllGearItemForAdmin,
+  getMyGearItems,
 };

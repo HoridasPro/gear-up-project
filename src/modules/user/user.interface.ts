@@ -7,5 +7,5 @@ export interface UserServiceInterface {
   role: Role;
   status: ActiveStatus;
   address?: string;
-  profilePhoto?: string;
+  profilePhoto?: Express.Multer.File | null;
 }

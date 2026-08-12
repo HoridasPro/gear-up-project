@@ -61,18 +61,6 @@ const getSinglePayment = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-// const cancelPayment = catchAsync(async (req: Request, res: Response) => {
-//   const { sessionId } = req?.body;
-
-//   const result = await paymentService.cancelPaymentIntoDB(sessionId);
-
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: httpStatus.OK,
-//     message: "Payment cancelled successfully",
-//     data: result,
-//   });
-// });
 
 export const paymentController = {
   createCheckoutSession,

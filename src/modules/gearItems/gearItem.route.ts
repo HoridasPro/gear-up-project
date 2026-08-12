@@ -14,6 +14,11 @@ router.post(
   gearItemController.createGearItem,
 );
 router.get("/gear", gearItemController.getAllGearItem);
+router.get(
+  "/provider/gears",
+  auth(Role.PROVIDER),
+  gearItemController.getMyGearItems,
+);
 router.get("/gear/:id", gearItemController.getSingleGearItem);
 router.put(
   "/gear/:id",

@@ -8,7 +8,7 @@ const createPaymentValidationSchema = z.object({
       .min(1, "Rental order ID is required")
       .refine(
         (value) => {
-          if (!value) return true; // empty হলে min() handle করবে
+          if (!value) return true;
           return /^c[a-z0-9]+$/.test(value);
         },
         {

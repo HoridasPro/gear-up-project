@@ -2,6 +2,8 @@ import { z } from "zod";
 
 const createReviewValidationSchema = z.object({
   body: z.object({
+    rentalOrderId: z.string().trim().min(1, "Rental order ID is required"),
+
     gearItemId: z.string().trim().min(1, "Gear item ID is required"),
 
     rating: z.coerce
@@ -20,6 +22,7 @@ const createReviewValidationSchema = z.object({
       .max(500, "Comment cannot exceed 500 characters"),
   }),
 });
+
 export const reviewValidationSchema = {
   createReviewValidationSchema,
 };

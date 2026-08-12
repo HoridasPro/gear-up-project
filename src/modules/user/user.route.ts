@@ -4,11 +4,13 @@ import { Role } from "../../../generated/prisma/enums";
 import { auth } from "../../middleware/auth";
 import { userValidation } from "./user.validation";
 import { validateRequest } from "../../middleware/validationRequest";
+import upload from "../../middleware/middlewares/upload";
 
 const router = Router();
 
 router.post(
   "/register",
+  upload.single("profilePhoto"),
   validateRequest(userValidation.createUserValidationSchema),
   userController.createUser,
 );

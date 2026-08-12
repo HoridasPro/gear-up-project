@@ -13,5 +13,6 @@ router.post(
   validateRequest(reviewValidationSchema.createReviewValidationSchema),
   reviewController.createReview,
 );
+router.get("/reviews", auth(Role.PROVIDER), reviewController.getAllReviews);
 
 export const reviewRoute = router;

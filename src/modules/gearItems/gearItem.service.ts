@@ -25,53 +25,7 @@ const createGearIntoDB = async (
 
   return result;
 };
-
-// const getAllGearItemIntoDB = async (query: Partial<IFilterGearItem>) => {
-//   const { category, price, brand } = query;
-
-//   const where: any = {};
-
-//   // Category Filter
-//   if (category) {
-//     where.category = {
-//       equals: category,
-//       mode: "insensitive",
-//     };
-//   }
-
-//   // Brand Filter
-//   if (brand) {
-//     where.brand = {
-//       equals: brand,
-//       mode: "insensitive",
-//     };
-//   }
-
-//   // Price Filter
-//   if (price) {
-//     where.price = Number(price);
-//   }
-
-//   const result = await prisma.gearItem.findMany({
-//     where,
-//     include: {
-//       provider: {
-//         select: {
-//           id: true,
-//           name: true,
-//           email: true,
-//           role: true,
-//           status: true,
-//           address: true,
-//           profilePhoto: true,
-//         },
-//       },
-//     },
-//   });
-
-//   return result;
-// };
-// gearItem.service.ts
+ 
 
 const getAllGearItemIntoDB = async (query: Partial<IFilterGearItem>) => {
   const { category, price, brand, search } = query;
@@ -216,6 +170,68 @@ const getAllGearItemForAdminIntoDB = async () => {
 
   return result;
 };
+const getMyGearItemsIntoDB = async (
+  providerId: string,
+  query: Partial<IFilterGearItem>,
+) => {
+  const { category, price, brand, search } = query;
+
+  const where: any = {
+    providerId,
+  };
+
+  if (search) {
+    where.OR = [
+      {
+        title: {
+          contains: search,
+          mode: "insensitive",
+        },
+      },
+      {
+        description: {
+          contains: search,
+          mode: "insensitive",
+        },
+      },
+    ];
+  }
+
+  if (category) {
+    where.category = {
+      equals: category,
+      mode: "insensitive",
+    };
+  }
+
+  if (brand) {
+    where.brand = {
+      equals: brand,
+      mode: "insensitive",
+    };
+  }
+
+  if (price) {
+    where.price = Number(price);
+  }
+
+  return await prisma.gearItem.findMany({
+    where,
+    include: {
+      provider: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+          address: true,
+          profilePhoto: true,
+        },
+      },
+    },
+  });
+};
 
 export const gearItemService = {
   createGearIntoDB,
@@ -224,4 +240,5 @@ export const gearItemService = {
   updateGearItemIntoDB,
   deleteGearItemFromDB,
   getAllGearItemForAdminIntoDB,
+  getMyGearItemsIntoDB
 };

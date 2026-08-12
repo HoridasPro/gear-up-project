@@ -3,22 +3,31 @@ import { prisma } from "../../lib/prisma";
 import { UserServiceInterface } from "./user.interface";
 import config from "../../config";
 import { ActiveStatus, Role } from "../../../generated/prisma/enums";
+import { uploadImageToImgBB } from "../../utils/uploadImageToImgBB";
 
 const createUserIntoDB = async (payload: UserServiceInterface) => {
   const { name, email, password, role, status, address, profilePhoto } =
     payload;
+
   const isUserExist = await prisma.user.findUnique({
     where: { email },
   });
 
   if (isUserExist) {
-    throw new Error("User already exist");
+    throw new Error("User already exists");
   }
 
   const hashedPassword = await bcrypt.hash(
     password,
     Number(config.bcrypt_salt_sounds),
   );
+
+  let imageUrl: string | null = null;
+
+  if (profilePhoto) {
+    imageUrl = await uploadImageToImgBB(profilePhoto);
+  }
+
   const createUser = await prisma.user.create({
     data: {
       name,
@@ -27,7 +36,7 @@ const createUserIntoDB = async (payload: UserServiceInterface) => {
       role: role.toUpperCase() as Role,
       status,
       address,
-      profilePhoto,
+      profilePhoto: imageUrl,
     },
   });
 
@@ -39,9 +48,9 @@ const createUserIntoDB = async (payload: UserServiceInterface) => {
       password: true,
     },
   });
+
   return user;
 };
-
 const getMyProfileIntoDB = async (id: string) => {
   const user = await prisma.user.findUniqueOrThrow({
     where: {
@@ -53,56 +62,6 @@ const getMyProfileIntoDB = async (id: string) => {
   return user;
 };
 
-// const getAllUsersFromDB = async (
-//   search: string = "",
-//   page: number = 1,
-//   limit: number = 10,
-// ) => {
-//   const skip = (page - 1) * limit;
-
-//   const where = search
-//     ? {
-//         OR: [
-//           {
-//             name: {
-//               contains: search,
-//               mode: "insensitive" as const,
-//             },
-//           },
-//           {
-//             email: {
-//               contains: search,
-//               mode: "insensitive" as const,
-//             },
-//           },
-//         ],
-//       }
-//     : {};
-
-//   const [users, total] = await Promise.all([
-//     prisma.user.findMany({
-//       where,
-//       skip,
-//       take: limit,
-//       orderBy: {
-//         createdAt: "desc",
-//       },
-//       omit: {
-//         password: true,
-//       },
-//     }),
-
-//     prisma.user.count({
-//       where,
-//     }),
-//   ]);
-//   console.log("Total:", total);
-//   console.log("Total Pages:", Math.ceil(total / limit));
-//   return {
-//     users,
-//     totalPages: Math.ceil(total / limit),
-//   };
-// };
 const getAllUsersFromDB = async (
   search: string = "",
   page: number = 1,
@@ -148,8 +107,6 @@ const getAllUsersFromDB = async (
   ]);
 
   const totalPages = Math.ceil(total / limit);
-
-  
 
   return {
     users,
