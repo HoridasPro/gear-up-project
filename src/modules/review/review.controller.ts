@@ -16,7 +16,7 @@ const createReview = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
- const getAllReviews = catchAsync(async (req:Request, res:Response) => {
+const getAllReviews = catchAsync(async (req: Request, res: Response) => {
   const result = await reviewService.getAllReviewsFromDB();
 
   sendResponse(res, {
@@ -29,5 +29,5 @@ const createReview = catchAsync(async (req: Request, res: Response) => {
 
 export const reviewController = {
   createReview,
-  getAllReviews
+  getAllReviews,
 };

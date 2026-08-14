@@ -4,6 +4,7 @@ import { UserServiceInterface } from "./user.interface";
 import config from "../../config";
 import { ActiveStatus, Role } from "../../../generated/prisma/enums";
 import { uploadImageToImgBB } from "../../utils/uploadImageToImgBB";
+import { IUser } from "./user.interface";
 
 const createUserIntoDB = async (payload: UserServiceInterface) => {
   const { name, email, password, role, status, address, profilePhoto } =
@@ -144,9 +145,63 @@ const updateUserStatusIntoDB = async (
   return result;
 };
 
+// src/app/modules/user/user.service.ts
+
+ 
+
+const updateMyProfile = async (
+  userId: string,
+  payload: Partial<IUser>,
+) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      ...(payload.name !== undefined && {
+        name: payload.name,
+      }),
+
+      ...(payload.address !== undefined && {
+        address: payload.address,
+      }),
+
+      ...(payload.profilePhoto !== undefined && {
+        profilePhoto: payload.profilePhoto,
+      }),
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      address: true,
+      profilePhoto: true,
+      role: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  return updatedUser;
+};
+
+ 
+
 export const userServiceDB = {
   createUserIntoDB,
   getMyProfileIntoDB,
   getAllUsersFromDB,
   updateUserStatusIntoDB,
+  updateMyProfile
 };

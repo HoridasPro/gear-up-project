@@ -27,5 +27,10 @@ router.patch(
   validateRequest(userValidation.updateUserValidationSchema),
   userController.updateUserStatus,
 );
+router.patch(
+  "/update",
+  auth(Role.CUSTOMER, Role.PROVIDER, Role.ADMIN),
+  userController.updateMyProfile,
+);
 
 export const createRoutes = router;

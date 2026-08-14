@@ -3,6 +3,8 @@ import httpStatus from "http-status";
 import { userServiceDB } from "./user.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
+// import { Request, Response } from "express";
+// import { UserService } from "./user.service";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const payload = {
@@ -78,9 +80,44 @@ const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// src/app/modules/user/user.controller.ts
+
+const updateMyProfile = async (req: Request, res: Response) => {
+  try {
+    const userId = req.data?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        statusCode: 401,
+        message: "Unauthorized user",
+      });
+    }
+
+    const result = await userServiceDB.updateMyProfile(userId, req.body);
+
+    return res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: "Profile updated successfully",
+      data: result,
+    });
+  } catch (error) {
+    console.error("Update profile error:", error);
+
+    return res.status(500).json({
+      success: false,
+      statusCode: 500,
+      message:
+        error instanceof Error ? error.message : "Failed to update profile",
+    });
+  }
+};
+
 export const userController = {
   createUser,
   getMyProfile,
   getAllUsers,
   updateUserStatus,
+  updateMyProfile,
 };

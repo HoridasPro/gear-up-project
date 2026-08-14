@@ -25,7 +25,6 @@ const createGearIntoDB = async (
 
   return result;
 };
- 
 
 const getAllGearItemIntoDB = async (query: Partial<IFilterGearItem>) => {
   const { category, price, brand, search } = query;
@@ -240,5 +239,5 @@ export const gearItemService = {
   updateGearItemIntoDB,
   deleteGearItemFromDB,
   getAllGearItemForAdminIntoDB,
-  getMyGearItemsIntoDB
+  getMyGearItemsIntoDB,
 };
