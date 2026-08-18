@@ -93,7 +93,6 @@ const getAllRentalOrdersByAdmin = catchAsync(
 const cancelRentalOrder = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  // auth middleware থেকে customer ID
   const customerId = req.data?.id as string;
 
   const result = await rentalOrderService.cancelRentalOrderIntoDB(

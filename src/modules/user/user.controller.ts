@@ -3,17 +3,12 @@ import httpStatus from "http-status";
 import { userServiceDB } from "./user.service";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
-// import { Request, Response } from "express";
-// import { UserService } from "./user.service";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const payload = {
     ...req.body,
     profilePhoto: req.file,
   };
-
-  console.log("REGISTER BODY =", req.body);
-  console.log("REGISTER FILE =", req.file);
 
   const user = await userServiceDB.createUserIntoDB(payload);
 
@@ -31,7 +26,7 @@ const getMyProfile = catchAsync(
     const userProfile = await userServiceDB.getMyProfileIntoDB(
       req.data?.id as string,
     );
-    console.log(userProfile);
+
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
@@ -45,9 +40,6 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const search = String(req.query.search || "");
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 10;
-
-  console.log("page now:", page);
-  console.log("limit now:", limit);
 
   const result = await userServiceDB.getAllUsersFromDB(search, page, limit);
 
@@ -80,8 +72,6 @@ const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// src/app/modules/user/user.controller.ts
-
 const updateMyProfile = async (req: Request, res: Response) => {
   try {
     const userId = req.data?.id;
@@ -103,8 +93,6 @@ const updateMyProfile = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.error("Update profile error:", error);
-
     return res.status(500).json({
       success: false,
       statusCode: 500,

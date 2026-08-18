@@ -145,8 +145,6 @@ const updateUserStatusIntoDB = async (
   return result;
 };
 
-// src/app/modules/user/user.service.ts
-
 const updateMyProfile = async (userId: string, payload: Partial<IUser>) => {
   const user = await prisma.user.findUnique({
     where: {

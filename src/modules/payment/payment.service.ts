@@ -2,55 +2,6 @@ import { PaymentStatus, RentalStatus } from "../../../generated/prisma/enums";
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
 import { stripe } from "../../lib/stripe";
-// const createCheckoutSessionIntoDB = async (
-//   customerId: string,
-//   rentalOrderId: string,
-// ) => {
-//   const rental = await prisma.rentalOrder.findUnique({
-//     where: { id: rentalOrderId },
-//   });
-
-//   if (!rental) throw new Error("Rental order not found");
-
-//   if (rental.customerId !== customerId) throw new Error("Unauthorized access");
-
-//   const payment = await prisma.payment.create({
-//     data: {
-//       amount: rental.totalPrice,
-//       customerId,
-//       rentalOrderId: rental.id,
-//       status: PaymentStatus.PENDING,
-//       currentPeriodEnd: new Date(),
-//     },
-//   });
-
-//   const session = await stripe.checkout.sessions.create({
-//     payment_method_types: ["card"],
-//     mode: "payment",
-
-//     line_items: [
-//       {
-//         price: config.stripe_product_price_id,
-//         quantity: 1,
-//       },
-//     ],
-
-//     metadata: {
-//       paymentId: payment.id,
-//       rentalOrderId: rental.id,
-//       customerId,
-//     },
-
-//     success_url: `${config.app_url}/payment?success=true&session_id={CHECKOUT_SESSION_ID}`,
-
-//     cancel_url: `${config.app_url}/payment?cancel=true&session_id={CHECKOUT_SESSION_ID}`,
-//   });
-
-//   return {
-//     checkoutUrl: session.url,
-//     sessionId: session.id,
-//   };
-// };
 
 const createCheckoutSessionIntoDB = async (
   customerId: string,
@@ -70,7 +21,6 @@ const createCheckoutSessionIntoDB = async (
     throw new Error("Unauthorized access");
   }
 
-  // Existing payment check
   const existingPayment = await prisma.payment.findUnique({
     where: {
       rentalOrderId,
@@ -80,15 +30,12 @@ const createCheckoutSessionIntoDB = async (
   let paymentRecord;
 
   if (existingPayment) {
-    // Already paid
     if (existingPayment.status === "PAID") {
       throw new Error("This rental order is already paid");
     }
 
-    // Existing unpaid payment reuse
     paymentRecord = existingPayment;
   } else {
-    // First time payment
     paymentRecord = await prisma.payment.create({
       data: {
         amount: rental.totalPrice,
@@ -100,7 +47,6 @@ const createCheckoutSessionIntoDB = async (
     });
   }
 
-  // Stripe Checkout Session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "payment",
@@ -149,7 +95,6 @@ const confirmPaymentIntoDB = async (sessionId: string) => {
 
   const payment = await prisma.payment.update({
     where: {
-      // transactionId: session.id,
       id: paymentId,
     },
     data: {
@@ -157,7 +102,6 @@ const confirmPaymentIntoDB = async (sessionId: string) => {
     },
   });
 
-  // Payment successful হলে RentalOrder status PAID হবে
   if (rentalOrderId) {
     await prisma.rentalOrder.update({
       where: {

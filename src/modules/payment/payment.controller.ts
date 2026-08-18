@@ -67,5 +67,4 @@ export const paymentController = {
   confirmPayment,
   getMyPayments,
   getSinglePayment,
-  // cancelPayment,
 };

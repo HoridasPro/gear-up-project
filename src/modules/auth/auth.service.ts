@@ -10,6 +10,15 @@ const userLoginDB = async (payload: IloginInteface) => {
   const user = await prisma.user.findUniqueOrThrow({
     where: { email },
   });
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (user.status !== "ACTIVE") {
+    if (user.status === "SUSPEND") {
+      throw new Error("Your account is suspended");
+    }
+  }
 
   const isPasswordMatched = await bcrypt.compare(password, user.password);
   if (!isPasswordMatched) {

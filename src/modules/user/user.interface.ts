@@ -9,7 +9,6 @@ export interface UserServiceInterface {
   address?: string;
   profilePhoto?: Express.Multer.File | null;
 }
-// src/app/modules/user/user.interface.ts
 
 export interface IUser {
   name?: string;

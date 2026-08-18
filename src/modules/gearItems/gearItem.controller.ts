@@ -114,9 +114,6 @@ const checkAvailability = async (req: Request, res: Response) => {
     });
   }
 
-  console.log("PARAMS:", req.params);
-  console.log("BODY:", req.body);
-
   const result = await gearItemService.checkGearAvailability(
     String(id),
     String(startDate),

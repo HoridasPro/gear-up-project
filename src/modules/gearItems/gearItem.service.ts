@@ -31,7 +31,6 @@ const getAllGearItemIntoDB = async (query: Partial<IFilterGearItem>) => {
 
   const where: any = {};
 
-  // 🔴 এখানে Search Filter বসাবেন
   if (search) {
     where.OR = [
       {
@@ -49,7 +48,6 @@ const getAllGearItemIntoDB = async (query: Partial<IFilterGearItem>) => {
     ];
   }
 
-  // Category Filter
   if (category) {
     where.category = {
       equals: category,
@@ -57,7 +55,6 @@ const getAllGearItemIntoDB = async (query: Partial<IFilterGearItem>) => {
     };
   }
 
-  // Brand Filter
   if (brand) {
     where.brand = {
       equals: brand,
@@ -65,7 +62,6 @@ const getAllGearItemIntoDB = async (query: Partial<IFilterGearItem>) => {
     };
   }
 
-  // Price Filter
   if (price) {
     where.price = Number(price);
   }
@@ -238,7 +234,6 @@ const checkGearAvailability = async (
   endDate: string,
   quantity: number,
 ) => {
-  // 1. Gear খুঁজে বের করা
   const gearItem = await prisma.gearItem.findUnique({
     where: {
       id: gearItemId,
@@ -249,7 +244,6 @@ const checkGearAvailability = async (
     throw new Error("Gear item not found");
   }
 
-  // 2. Quantity validation
   if (quantity <= 0) {
     throw new Error("Quantity must be greater than 0");
   }
@@ -261,7 +255,6 @@ const checkGearAvailability = async (
     };
   }
 
-  // 3. Date convert
   const rentalStartDate = new Date(startDate);
   const rentalEndDate = new Date(endDate);
 
@@ -269,12 +262,10 @@ const checkGearAvailability = async (
     throw new Error("Invalid rental date");
   }
 
-  // 4. Date validation
   if (rentalStartDate >= rentalEndDate) {
     throw new Error("End date must be after start date");
   }
 
-  // 5. Find overlapping orders
   const overlappingOrders = await prisma.rentalOrder.findMany({
     where: {
       gearItemId,
@@ -297,16 +288,13 @@ const checkGearAvailability = async (
     },
   });
 
-  // 6. Calculate booked quantity
   const bookedQuantity = overlappingOrders.reduce(
     (total, order) => total + order.quantity,
     0,
   );
 
-  // 7. Calculate available quantity
   const availableQuantity = gearItem.quantity - bookedQuantity;
 
-  // 8. Check requested quantity
   const available = availableQuantity >= quantity;
 
   return {

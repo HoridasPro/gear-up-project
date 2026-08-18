@@ -20,8 +20,6 @@ export const uploadImageToImgBB = async (
   const result = await response.json();
 
   if (!response.ok || !result.success) {
-    console.error("ImgBB upload error:", result);
-
     throw new Error(result?.error?.message || "Image upload failed");
   }
 

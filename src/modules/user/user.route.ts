@@ -35,7 +35,7 @@ router.patch(
 router.patch(
   "/users/:id/role",
   auth(Role.ADMIN),
-  userController.updateUserRole
+  userController.updateUserRole,
 );
 
 export const createRoutes = router;
