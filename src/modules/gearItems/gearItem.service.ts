@@ -232,6 +232,89 @@ const getMyGearItemsIntoDB = async (
   });
 };
 
+const checkGearAvailability = async (
+  gearItemId: string,
+  startDate: string,
+  endDate: string,
+  quantity: number,
+) => {
+  // 1. Gear খুঁজে বের করা
+  const gearItem = await prisma.gearItem.findUnique({
+    where: {
+      id: gearItemId,
+    },
+  });
+
+  if (!gearItem) {
+    throw new Error("Gear item not found");
+  }
+
+  // 2. Quantity validation
+  if (quantity <= 0) {
+    throw new Error("Quantity must be greater than 0");
+  }
+
+  if (quantity > gearItem.quantity) {
+    return {
+      available: false,
+      availableQuantity: gearItem.quantity,
+    };
+  }
+
+  // 3. Date convert
+  const rentalStartDate = new Date(startDate);
+  const rentalEndDate = new Date(endDate);
+
+  if (isNaN(rentalStartDate.getTime()) || isNaN(rentalEndDate.getTime())) {
+    throw new Error("Invalid rental date");
+  }
+
+  // 4. Date validation
+  if (rentalStartDate >= rentalEndDate) {
+    throw new Error("End date must be after start date");
+  }
+
+  // 5. Find overlapping orders
+  const overlappingOrders = await prisma.rentalOrder.findMany({
+    where: {
+      gearItemId,
+
+      startDate: {
+        lte: rentalEndDate,
+      },
+
+      endDate: {
+        gte: rentalStartDate,
+      },
+
+      status: {
+        not: "CANCELLED",
+      },
+    },
+
+    select: {
+      quantity: true,
+    },
+  });
+
+  // 6. Calculate booked quantity
+  const bookedQuantity = overlappingOrders.reduce(
+    (total, order) => total + order.quantity,
+    0,
+  );
+
+  // 7. Calculate available quantity
+  const availableQuantity = gearItem.quantity - bookedQuantity;
+
+  // 8. Check requested quantity
+  const available = availableQuantity >= quantity;
+
+  return {
+    available,
+    availableQuantity: Math.max(availableQuantity, 0),
+  };
+};
+
 export const gearItemService = {
   createGearIntoDB,
   getAllGearItemIntoDB,
@@ -240,4 +323,5 @@ export const gearItemService = {
   deleteGearItemFromDB,
   getAllGearItemForAdminIntoDB,
   getMyGearItemsIntoDB,
+  checkGearAvailability,
 };

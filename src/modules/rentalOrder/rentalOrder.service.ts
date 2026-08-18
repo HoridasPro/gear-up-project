@@ -1,10 +1,12 @@
 import { RentalStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { IRentalOrder } from "./rentalOrder.interface";
+ 
 const createRentalIntoDB = async (
   payload: IRentalOrder,
   customerId: string,
 ) => {
+  // 1. Customer check
   const customer = await prisma.user.findUnique({
     where: {
       id: customerId,
@@ -19,6 +21,7 @@ const createRentalIntoDB = async (
     throw new Error("Your account is suspended. You cannot place an order.");
   }
 
+  // 2. Gear check
   const gearItem = await prisma.gearItem.findUnique({
     where: {
       id: payload.gearItemId,
@@ -29,23 +32,80 @@ const createRentalIntoDB = async (
     throw new Error("Gear item not found");
   }
 
-  if (gearItem.quantity < payload.quantity) {
-    throw new Error("Insufficient quantity");
+  // 3. Quantity validation
+  if (payload.quantity <= 0) {
+    throw new Error("Quantity must be greater than 0");
   }
 
+  if (payload.quantity > gearItem.quantity) {
+    throw new Error("Requested quantity exceeds total gear quantity");
+  }
+
+  // 4. Date validation
   const startDate = new Date(payload.startDate);
   const endDate = new Date(payload.endDate);
+
+  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+    throw new Error("Invalid rental date");
+  }
 
   if (startDate >= endDate) {
     throw new Error("End date must be after start date");
   }
 
+  // 5. Check overlapping rental orders
+  const overlappingOrders = await prisma.rentalOrder.findMany({
+    where: {
+      gearItemId: payload.gearItemId,
+
+      // Existing order starts before/equal to
+      // customer's end date
+      startDate: {
+        lte: endDate,
+      },
+
+      // Existing order ends after/equal to
+      // customer's start date
+      endDate: {
+        gte: startDate,
+      },
+
+      // Cancelled orders should not block availability
+      status: {
+        not: "CANCELLED",
+      },
+    },
+
+    select: {
+      quantity: true,
+    },
+  });
+
+  // 6. Calculate already booked quantity
+  const bookedQuantity = overlappingOrders.reduce(
+    (total, order) => total + order.quantity,
+    0,
+  );
+
+  // 7. Calculate available quantity
+  const availableQuantity = gearItem.quantity - bookedQuantity;
+
+  // 8. Check requested quantity
+  if (availableQuantity < payload.quantity) {
+    throw new Error(
+      `Only ${availableQuantity} item(s) are available for the selected dates.`,
+    );
+  }
+
+  // 9. Calculate rental days
   const days = Math.ceil(
     (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
   );
 
+  // 10. Calculate total price
   const totalPrice = gearItem.price * payload.quantity * days;
 
+  // 11. Create rental order
   const rentalOrder = await prisma.rentalOrder.create({
     data: {
       gearItemId: payload.gearItemId,
@@ -54,21 +114,17 @@ const createRentalIntoDB = async (
       totalPrice,
       startDate,
       endDate,
+
+      
     },
+
     include: {
       customer: true,
       gearItem: true,
     },
   });
 
-  await prisma.gearItem.update({
-    where: {
-      id: payload.gearItemId,
-    },
-    data: {
-      quantity: gearItem.quantity - payload.quantity,
-    },
-  });
+ 
 
   return rentalOrder;
 };
@@ -80,6 +136,7 @@ const allGetMyRentalOrdersFromDB = async (customerId: string) => {
     },
     include: {
       gearItem: true,
+      payment: true,
     },
     orderBy: {
       rentalDate: "desc",
@@ -90,7 +147,23 @@ const allGetMyRentalOrdersFromDB = async (customerId: string) => {
     throw new Error("Rental orders not found");
   }
 
-  return result;
+  const rentalsWithReview = await Promise.all(
+    result.map(async (rental) => {
+      const review = await prisma.review.findFirst({
+        where: {
+          rentalOrderId: rental.id,
+          customerId,
+        },
+      });
+
+      return {
+        ...rental,
+        hasReview: !!review,
+      };
+    }),
+  );
+
+  return rentalsWithReview;
 };
 
 const getSingleRentalOrderFromDB = async (id: string, customerId: string) => {
@@ -203,6 +276,43 @@ const getAllRentalOrdersByAdminIntoDB = async () => {
   return result;
 };
 
+const cancelRentalOrderIntoDB = async (
+  rentalOrderId: string,
+  customerId: string,
+) => {
+  // 1. Rental order খুঁজে বের করা
+  const rentalOrder = await prisma.rentalOrder.findFirst({
+    where: {
+      id: rentalOrderId,
+      customerId,
+    },
+  });
+
+  if (!rentalOrder) {
+    throw new Error("Rental order not found");
+  }
+
+  // 2. শুধু PLACED order cancel করা যাবে
+  if (rentalOrder.status !== "PLACED") {
+    throw new Error("Only placed rental orders can be cancelled");
+  }
+
+  // 3. Cancel order
+  const result = await prisma.rentalOrder.update({
+    where: {
+      id: rentalOrderId,
+    },
+    data: {
+      status: "CANCELLED",
+    },
+    include: {
+      gearItem: true,
+    },
+  });
+
+  return result;
+};
+
 export const rentalOrderService = {
   createRentalIntoDB,
   allGetMyRentalOrdersFromDB,
@@ -210,4 +320,5 @@ export const rentalOrderService = {
   getProviderOrdersFromDB,
   updateRentalOrderStatusIntoDB,
   getAllRentalOrdersByAdminIntoDB,
+  cancelRentalOrderIntoDB
 };

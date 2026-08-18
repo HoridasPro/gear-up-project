@@ -90,6 +90,24 @@ const getAllRentalOrdersByAdmin = catchAsync(
     });
   },
 );
+const cancelRentalOrder = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  // auth middleware থেকে customer ID
+  const customerId = req.data?.id as string;
+
+  const result = await rentalOrderService.cancelRentalOrderIntoDB(
+    id as string,
+    customerId,
+  );
+
+  return res.status(200).json({
+    success: true,
+    statusCode: 200,
+    message: "Rental order cancelled successfully",
+    data: result,
+  });
+};
 
 export const rentalOrderController = {
   createRentalOrder,
@@ -98,4 +116,5 @@ export const rentalOrderController = {
   getProviderOrders,
   updateRentalOrderStatus,
   getAllRentalOrdersByAdmin,
+  cancelRentalOrder,
 };

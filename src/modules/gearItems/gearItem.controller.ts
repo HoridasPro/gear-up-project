@@ -102,6 +102,36 @@ const getMyGearItems = async (req: Request, res: Response) => {
   });
 };
 
+const checkAvailability = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const { startDate, endDate, quantity } = req.body;
+
+  if (!startDate || !endDate || !quantity) {
+    return res.status(400).json({
+      success: false,
+      message: "startDate, endDate and quantity are required",
+    });
+  }
+
+  console.log("PARAMS:", req.params);
+  console.log("BODY:", req.body);
+
+  const result = await gearItemService.checkGearAvailability(
+    String(id),
+    String(startDate),
+    String(endDate),
+    Number(quantity),
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Gear availability checked successfully",
+    data: result,
+  });
+};
+
 export const gearItemController = {
   createGearItem,
   getAllGearItem,
@@ -110,4 +140,5 @@ export const gearItemController = {
   deleteGearItem,
   getAllGearItemForAdmin,
   getMyGearItems,
+  checkAvailability,
 };

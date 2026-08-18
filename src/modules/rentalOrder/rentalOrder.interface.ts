@@ -1,6 +1,6 @@
 export interface IRentalOrder {
   gearItemId: string;
   quantity: number;
-  startDate: string;
-  endDate: string;
+  startDate: string | Date;
+  endDate: string | Date;
 }

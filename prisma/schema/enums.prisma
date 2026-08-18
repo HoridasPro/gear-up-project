@@ -14,6 +14,10 @@ enum RentalStatus {
   RETURNED
   REJECTED
   PICKEDUP
+  CONFIRMED
+  PLACED
+  CANCELLED
+  PAID
 }
 
 enum PaymentStatus {
@@ -21,4 +25,5 @@ enum PaymentStatus {
   PAID
   CANCELLED
   EXPIRED
+  PLACED
 }

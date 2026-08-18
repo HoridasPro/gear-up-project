@@ -147,12 +147,7 @@ const updateUserStatusIntoDB = async (
 
 // src/app/modules/user/user.service.ts
 
- 
-
-const updateMyProfile = async (
-  userId: string,
-  payload: Partial<IUser>,
-) => {
+const updateMyProfile = async (userId: string, payload: Partial<IUser>) => {
   const user = await prisma.user.findUnique({
     where: {
       id: userId,
@@ -195,13 +190,31 @@ const updateMyProfile = async (
 
   return updatedUser;
 };
+const updateUserRoleIntoDB = async (
+  id: string,
+  role: "CUSTOMER" | "PROVIDER" | "ADMIN",
+) => {
+  const result = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      role,
+    },
+  });
 
- 
+  return result;
+};
+
+export const AdminServices = {
+  updateUserRoleIntoDB,
+};
 
 export const userServiceDB = {
   createUserIntoDB,
   getMyProfileIntoDB,
   getAllUsersFromDB,
   updateUserStatusIntoDB,
-  updateMyProfile
+  updateMyProfile,
+  updateUserRoleIntoDB,
 };

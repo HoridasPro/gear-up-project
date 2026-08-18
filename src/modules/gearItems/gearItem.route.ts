@@ -37,5 +37,6 @@ router.get(
   auth(Role.ADMIN),
   gearItemController.getAllGearItemForAdmin,
 );
+router.post("/gear/availability/:id", gearItemController.checkAvailability);
 
 export const gearItemRoutes = router;

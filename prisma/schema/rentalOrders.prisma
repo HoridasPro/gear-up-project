@@ -5,10 +5,11 @@ model RentalOrder {
 
   startDate   DateTime?
   endDate     DateTime?
+  payment     Payment?
 
   rentalDate  DateTime @default(now())
-  status      RentalStatus @default(PENDING)
-  payments    Payment[]
+  status      RentalStatus @default(PLACED)
+ 
   reviews     Review[]
 
   gearItemId  String
