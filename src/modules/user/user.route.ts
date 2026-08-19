@@ -37,5 +37,10 @@ router.patch(
   auth(Role.ADMIN),
   userController.updateUserRole,
 );
+router.delete(
+  "/deleteAccount/me",
+  auth(Role.CUSTOMER, Role.PROVIDER),
+  userController.deleteMyAccount,
+);
 
 export const createRoutes = router;

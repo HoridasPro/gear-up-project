@@ -204,8 +204,24 @@ const updateUserRoleIntoDB = async (
   return result;
 };
 
-export const AdminServices = {
-  updateUserRoleIntoDB,
+const deleteMyAccountIntoDB = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  await prisma.user.delete({
+    where: {
+      id: userId,
+    },
+  });
+
+  return null;
 };
 
 export const userServiceDB = {
@@ -215,4 +231,5 @@ export const userServiceDB = {
   updateUserStatusIntoDB,
   updateMyProfile,
   updateUserRoleIntoDB,
+  deleteMyAccountIntoDB,
 };

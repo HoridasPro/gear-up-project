@@ -116,6 +116,32 @@ const updateUserRole = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteMyAccount = async (req: Request, res: Response) => {
+  try {
+    const userId = req.data?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    await userServiceDB.deleteMyAccountIntoDB(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Account deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Failed to delete account",
+    });
+  }
+};
+
 export const userController = {
   createUser,
   getMyProfile,
@@ -123,4 +149,5 @@ export const userController = {
   updateUserStatus,
   updateMyProfile,
   updateUserRole,
+  deleteMyAccount,
 };
